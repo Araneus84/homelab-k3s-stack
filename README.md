@@ -18,6 +18,11 @@ flowchart LR
     subgraph cluster["Kubernetes Cluster"]
         subgraph infra["Infrastructure"]
             velero["Velero\nBackup & Restore"]
+            pihole-dns["Pihole DNS\nDNS Control and filtering"]
+            argocd["ArgoCD\nGitOps Stack Manager"]
+            cert-manager["Cert-Manager"]
+            nginx-ingress["nginx-ngress controller"]
+            monitoring["Monitoring stack with promethius, grafana and loki in the future"]
         end
         subgraph media["Media Stack"]
             overseerr["Overseerr"]
@@ -26,6 +31,13 @@ flowchart LR
             sonarr["Sonarr"]
             qbit["qBittorrent"]
             plex["Plex"]
+        end
+        subgraph securit["Security Stack"]
+            vaultwarden["Vaultwarden Password Manager"]
+            sealedsecrets["SealedSecrets to store in k8s cluster"]
+        end
+        subgraph tools["Personal tools"]
+            homeassistant["Homeassistant app to control smart home"]
         end
     end
     overseerr -->|requests| radarr
