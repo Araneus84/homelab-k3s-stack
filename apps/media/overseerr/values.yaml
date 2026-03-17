@@ -35,9 +35,5 @@ resources:
     cpu: 500m
     memory: 256Mi
 
-securityContext:
-  runAsUser: 1000
-  runAsGroup: 1000
-
 strategy:
   type: Recreate
