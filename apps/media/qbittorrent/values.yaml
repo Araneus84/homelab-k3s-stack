@@ -36,8 +36,8 @@ persistence:
 
 nfs:
   downloads:
-    server: nas.home
-    path: /volume1/data/Downloads
+    server: 192.168.50.110
+    path: /mnt/HD/HD_a2/NAS
     mountPath: /downloads
 
 resources:

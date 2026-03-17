@@ -32,13 +32,13 @@ persistence:
 # NFS volumes for media from NAS
 nfsMedia:
   enabled: true
-  server: "nas.home"
+  server: "192.168.50.110"
   downloads:
-    path: /volume1/data/Downloads
+    path: /mnt/HD/HD_a2/NAS
     mountPath: /downloads
   media:
-    path: /volume1/data/Tv
-    mountPath: /tv
+    path: /mnt/HD/HD_a2/NAS
+    mountPath: /Tv
 
 resources:
   requests:

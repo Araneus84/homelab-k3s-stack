@@ -35,12 +35,12 @@ persistence:
 # NFS volumes for media (read-only mounts from NAS)
 nfsMedia:
   enabled: true
-  server: "nas.home"      # <-- Change to your NAS IP
+  server: "192.168.50.110"      # <-- Change to your NAS IP
   movies:
-    path: /volume1/data/Movies
+    path: /mnt/HD/HD_a2/NAS
     mountPath: /Movies
   tv:
-    path: /volume1/data/Tv
+    path: /mnt/HD/HD_a2/NAS
     mountPath: /Tv
 
 resources:
