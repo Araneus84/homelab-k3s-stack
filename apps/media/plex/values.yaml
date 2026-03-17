@@ -37,10 +37,10 @@ nfsMedia:
   enabled: true
   server: "192.168.50.110"      # <-- Change to your NAS IP
   movies:
-    path: /mnt/HD/HD_a2/NAS
+    path: /mnt/HD/HD_a2/NAS/Movies
     mountPath: /Movies
   tv:
-    path: /mnt/HD/HD_a2/NAS
+    path: /mnt/HD/HD_a2/NAS/Tv
     mountPath: /Tv
 
 resources:
