@@ -40,15 +40,15 @@ k3s_extra_server_args: >-
 
 # --- Firewall ---
 firewall_allowed_ports:
-  - { port: 22,    proto: tcp, comment: "SSH" }
-  - { port: 80,    proto: tcp, comment: "HTTP" }
-  - { port: 443,   proto: tcp, comment: "HTTPS" }
-  - { port: 6443,  proto: tcp, comment: "k8s API" }
-  - { port: 53,    proto: tcp, comment: "DNS TCP" }
-  - { port: 53,    proto: udp, comment: "DNS UDP" }
+  - { port: 22, proto: tcp, comment: "SSH" }
+  - { port: 80, proto: tcp, comment: "HTTP" }
+  - { port: 443, proto: tcp, comment: "HTTPS" }
+  - { port: 6443, proto: tcp, comment: "k8s API" }
+  - { port: 53, proto: tcp, comment: "DNS TCP" }
+  - { port: 53, proto: udp, comment: "DNS UDP" }
   - { port: 32400, proto: tcp, comment: "Plex" }
   - { port: 10250, proto: tcp, comment: "Kubelet API" }
-  - { port: 8472,  proto: udp, comment: "Flannel VXLAN" }
+  - { port: 8472, proto: udp, comment: "Flannel VXLAN" }
   - { port: 51820, proto: udp, comment: "Flannel WireGuard" }
 
 # --- SSH ---

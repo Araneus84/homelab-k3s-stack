@@ -49,14 +49,18 @@
 # --- NFS Health Check ---
 - name: Verify NFS mounts are still accessible
   ansible.builtin.command: "mountpoint -q {{ nfs_mount_point }}"
-  register: nfs_mount_check
+  register: maintenance_nfs_mount_check
   changed_when: false
   failed_when: false
 
 - name: Remount NFS if needed
-  ansible.builtin.command: "mount {{ nfs_mount_point }}"
-  when: nfs_mount_check.rc != 0
-  changed_when: true
+  ansible.posix.mount:
+    path: "{{ nfs_mount_point }}"
+    src: "{{ nfs_server }}:{{ nfs_base_export }}"
+    fstype: nfs
+    opts: "{{ nfs_mount_opts }}"
+    state: mounted
+  when: maintenance_nfs_mount_check.rc != 0
 
 # --- k3s Service Health ---
 - name: Verify k3s service is running
@@ -67,23 +71,23 @@
 
 - name: Check k3s node status
   ansible.builtin.command: k3s kubectl get nodes
-  register: node_status
+  register: maintenance_node_status
   changed_when: false
 
 - name: Warn if node is not Ready
   ansible.builtin.debug:
-    msg: "WARNING: Node may not be ready. Status: {{ node_status.stdout }}"
-  when: "'NotReady' in node_status.stdout"
+    msg: "WARNING: Node may not be ready. Status: {{ maintenance_node_status.stdout }}"
+  when: "'NotReady' in maintenance_node_status.stdout"
 
 # --- Disk Space Check ---
 - name: Check disk space
   ansible.builtin.command: df -h /
-  register: disk_space
+  register: maintenance_disk_space
   changed_when: false
 
 - name: Display disk usage
   ansible.builtin.debug:
-    msg: "{{ disk_space.stdout_lines }}"
+    msg: "{{ maintenance_disk_space.stdout_lines }}"
 
 # --- Clean up old container images ---
 - name: Prune unused container images (k3s crictl)

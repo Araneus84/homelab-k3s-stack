@@ -67,20 +67,20 @@
 - name: Check if Helm is installed
   ansible.builtin.stat:
     path: /usr/local/bin/helm
-  register: helm_binary
+  register: k3s_helm_binary
 
 - name: Download Helm install script
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
     dest: /tmp/get-helm.sh
     mode: "0755"
-  when: not helm_binary.stat.exists
+  when: not k3s_helm_binary.stat.exists
 
 - name: Install Helm
   ansible.builtin.command: /tmp/get-helm.sh
   environment:
     DESIRED_VERSION: v3.17.0
-  when: not helm_binary.stat.exists
+  when: not k3s_helm_binary.stat.exists
   changed_when: true
 
 # --- Create namespaces ---
@@ -94,19 +94,19 @@
     - security
     - monitoring
     - argocd
-  register: ns_result
-  changed_when: ns_result.rc == 0
-  failed_when: ns_result.rc != 0 and 'already exists' not in ns_result.stderr
+  register: k3s_ns_result
+  changed_when: k3s_ns_result.rc == 0
+  failed_when: k3s_ns_result.rc != 0 and 'already exists' not in k3s_ns_result.stderr
 
 # --- Verify ---
 - name: Verify cluster health
   ansible.builtin.command: k3s kubectl get nodes -o wide
-  register: cluster_status
+  register: k3s_cluster_status
   changed_when: false
 
 - name: Display cluster status
   ansible.builtin.debug:
-    msg: "{{ cluster_status.stdout_lines }}"
+    msg: "{{ k3s_cluster_status.stdout_lines }}"
 
 - name: Clean up install scripts
   ansible.builtin.file:
