@@ -2,7 +2,7 @@ nfs-subdir-external-provisioner:
   # NFS server details -- UPDATE THESE to match your NAS
   nfs:
     server: "192.168.50.110"    # <-- Change to your NAS IP
-    path: /mnt/HD/HD_a2/NAS   # <-- Change to your NAS export path
+    path: /mnt/HD/HD_a2/NAS/homelab_k3s_stack   # Base folder for all k3s PVC data
 
   storageClass:
     name: nfs-client
