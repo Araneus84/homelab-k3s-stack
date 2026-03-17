@@ -1,0 +1,92 @@
+kube-prometheus-stack:
+  # --- Grafana ---
+  grafana:
+    enabled: true
+
+    # Ingress for Grafana UI
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - grafana.home
+      tls: []
+
+    # Default admin credentials are managed via sealed secret
+    # Override with environment variables in production
+    adminUser: admin
+    # adminPassword is set via existing secret -- see docs/setup.md
+    admin:
+      existingSecret: grafana-admin-credentials
+      userKey: admin-user
+      passwordKey: admin-password
+
+    # Persistent storage for dashboards
+    persistence:
+      enabled: true
+      storageClassName: nfs-client
+      size: 5Gi
+
+    # Resource limits
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+    # Auto-discover dashboards from ConfigMaps
+    sidecar:
+      dashboards:
+        enabled: true
+        searchNamespace: ALL
+
+  # --- Prometheus ---
+  prometheus:
+    prometheusSpec:
+      # Retention
+      retention: 15d
+      retentionSize: 10GB
+
+      # Storage
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: nfs-client
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 20Gi
+
+      # Resource limits
+      resources:
+        requests:
+          cpu: 200m
+          memory: 512Mi
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+
+      # Scrape all namespaces
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+
+  # --- Alertmanager ---
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+
+  # --- Node Exporter ---
+  nodeExporter:
+    enabled: true
+
+  # --- kube-state-metrics ---
+  kubeStateMetrics:
+    enabled: true

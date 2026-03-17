@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "plex.fullname" . }}
+  labels:
+    {{- include "plex.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ include "plex.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "plex.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "plex.selectorLabels" . | nindent 8 }}
+    spec:
+      hostNetwork: {{ .Values.hostNetwork }}
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
+        fsGroup: {{ .Values.securityContext.runAsGroup }}
+      containers:
+        - name: plex
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- if .Values.existingClaimSecret }}
+            - name: PLEX_CLAIM
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingClaimSecret }}
+                  key: claim-token
+            {{- end }}
+          ports:
+            - name: plex
+              containerPort: 32400
+              protocol: TCP
+            - name: dlna-tcp
+              containerPort: 32469
+              protocol: TCP
+            - name: dlna-udp
+              containerPort: 1900
+              protocol: UDP
+            - name: gdm1
+              containerPort: 32410
+              protocol: UDP
+            - name: gdm2
+              containerPort: 32412
+              protocol: UDP
+            - name: gdm3
+              containerPort: 32413
+              protocol: UDP
+            - name: gdm4
+              containerPort: 32414
+              protocol: UDP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            {{- if .Values.nfsMedia.enabled }}
+            - name: movies
+              mountPath: {{ .Values.nfsMedia.movies.mountPath }}
+              readOnly: true
+            - name: tv
+              mountPath: {{ .Values.nfsMedia.tv.mountPath }}
+              readOnly: true
+            {{- end }}
+            - name: transcode
+              mountPath: /transcode
+          livenessProbe:
+            httpGet:
+              path: /web/index.html
+              port: plex
+            initialDelaySeconds: 120
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /web/index.html
+              port: plex
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "plex.fullname" . }}-config
+        {{- if .Values.nfsMedia.enabled }}
+        - name: movies
+          nfs:
+            server: {{ .Values.nfsMedia.server }}
+            path: {{ .Values.nfsMedia.movies.path }}
+            readOnly: true
+        - name: tv
+          nfs:
+            server: {{ .Values.nfsMedia.server }}
+            path: {{ .Values.nfsMedia.tv.path }}
+            readOnly: true
+        {{- end }}
+        - name: transcode
+          emptyDir:
+            sizeLimit: 10Gi
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

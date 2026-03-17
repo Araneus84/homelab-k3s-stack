@@ -1,0 +1,56 @@
+# Radarr movie management configuration
+replicaCount: 1
+
+image:
+  repository: lscr.io/linuxserver/radarr
+  tag: "5.16.3"
+  pullPolicy: IfNotPresent
+
+# Environment
+env:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "Asia/Jerusalem"
+
+service:
+  type: ClusterIP
+  port: 7878
+
+ingress:
+  enabled: true
+  className: nginx
+  host: radarr.home
+
+# Persistent storage for Radarr config
+persistence:
+  config:
+    enabled: true
+    storageClass: nfs-client
+    size: 5Gi
+    accessMode: ReadWriteOnce
+
+# NFS volumes for media from NAS
+nfsMedia:
+  enabled: true
+  server: "nas.home"
+  downloads:
+    path: /volume1/data/Downloads
+    mountPath: /downloads
+  media:
+    path: /volume1/data/Movies
+    mountPath: /movies
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+nodeSelector: {}
+tolerations: []

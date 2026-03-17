@@ -1,0 +1,56 @@
+replicaCount: 1
+
+image:
+  repository: lscr.io/linuxserver/qbittorrent
+  tag: "5.0.4"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+env:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "Asia/Jerusalem"
+
+service:
+  web:
+    type: ClusterIP
+    port: 8080
+  bittorrent:
+    type: NodePort
+    port: 6881
+    nodePort: 6881
+
+ingress:
+  enabled: true
+  className: nginx
+  host: qbit.home
+
+persistence:
+  config:
+    enabled: true
+    storageClass: nfs-client
+    size: 2Gi
+    accessMode: ReadWriteOnce
+
+nfs:
+  downloads:
+    server: nas.home
+    path: /volume1/data/Downloads
+    mountPath: /downloads
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+strategy:
+  type: Recreate

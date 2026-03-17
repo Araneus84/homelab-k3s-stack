@@ -1,0 +1,20 @@
+nfs-subdir-external-provisioner:
+  # NFS server details -- UPDATE THESE to match your NAS
+  nfs:
+    server: "nas.home"    # <-- Change to your NAS IP
+    path: /volume1/k8s-data   # <-- Change to your NAS export path
+
+  storageClass:
+    name: nfs-client
+    defaultClass: true
+    reclaimPolicy: Retain     # Keep data on PV deletion
+    archiveOnDelete: true     # Move data to archived-* on delete
+
+  # Resource limits
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi

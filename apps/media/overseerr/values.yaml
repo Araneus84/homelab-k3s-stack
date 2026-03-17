@@ -1,0 +1,43 @@
+replicaCount: 1
+
+image:
+  repository: sctx/overseerr
+  tag: "1.33.2"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+env:
+  TZ: "Asia/Jerusalem"
+
+service:
+  type: ClusterIP
+  port: 5055
+
+ingress:
+  enabled: true
+  className: nginx
+  host: overseerr.home
+
+persistence:
+  config:
+    enabled: true
+    storageClass: nfs-client
+    size: 2Gi
+    accessMode: ReadWriteOnce
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+strategy:
+  type: Recreate

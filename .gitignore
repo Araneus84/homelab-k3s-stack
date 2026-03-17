@@ -1,0 +1,42 @@
+# Secrets - NEVER commit unencrypted secrets
+**/secrets/*.yaml
+!**/secrets/*.sealed.yaml
+*.key
+*.pem
+*.crt
+
+# Ansible
+ansible/inventory/hosts.yml    # Contains real IPs -- use hosts.yml.example
+*.retry
+
+# Helm build artifacts
+**/charts/*.tgz
+**/Chart.lock
+
+# Kubeconfig
+kubeconfig
+*.kubeconfig
+k3s.yaml
+
+# Environment files with secrets
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp
+*.tmp
+*.bak
+*.log
+
+# My Files 
+/docs/hand-holding-guide.md

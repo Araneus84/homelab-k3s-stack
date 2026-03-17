@@ -1,0 +1,30 @@
+---
+# ==============================================================================
+# Maintenance Playbook - Ongoing system maintenance
+# ==============================================================================
+# Usage:
+#   ansible-playbook playbooks/maintenance.yml
+#
+# Can be scheduled via cron on the control machine:
+#   0 3 * * 0 cd /path/to/homelab/ansible && ansible-playbook playbooks/maintenance.yml
+# ==============================================================================
+
+- name: Perform system maintenance
+  hosts: k3s_servers
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: maintenance
+      tags: [maintenance]
+
+  post_tasks:
+    - name: Display maintenance summary
+      ansible.builtin.debug:
+        msg: |
+          Maintenance complete on {{ inventory_hostname }}
+          - Packages updated
+          - Logs rotated
+          - Disk space checked
+          - NFS mounts verified
+          - k3s service verified

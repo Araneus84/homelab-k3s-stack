@@ -1,0 +1,59 @@
+# Plex Media Server configuration
+replicaCount: 1
+
+image:
+  repository: plexinc/pms-docker
+  tag: "1.41.3.9314-a0bfb8370"
+  pullPolicy: IfNotPresent
+
+# Plex requires hostNetwork for GDM (discovery) and DLNA
+hostNetwork: true
+
+# Environment
+env:
+  TZ: "Asia/Jerusalem"
+  PLEX_UID: "1000"
+  PLEX_GID: "1000"
+  # PLEX_CLAIM: ""  # Set via sealed secret for initial setup
+
+# Plex claim token -- use sealed secret for initial server setup
+# Generate at: https://www.plex.tv/claim/
+existingClaimSecret: ""
+
+service:
+  type: ClusterIP
+  port: 32400
+
+# Persistent storage for Plex config/metadata
+persistence:
+  config:
+    enabled: true
+    storageClass: nfs-client
+    size: 20Gi
+    accessMode: ReadWriteOnce
+
+# NFS volumes for media (read-only mounts from NAS)
+nfsMedia:
+  enabled: true
+  server: "nas.home"      # <-- Change to your NAS IP
+  movies:
+    path: /volume1/data/Movies
+    mountPath: /Movies
+  tv:
+    path: /volume1/data/Tv
+    mountPath: /Tv
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 4000m
+    memory: 4Gi
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+nodeSelector: {}
+tolerations: []

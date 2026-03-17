@@ -1,0 +1,56 @@
+replicaCount: 1
+
+image:
+  repository: vaultwarden/server
+  tag: "1.32.7"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+env:
+  WEB_VAULT_ENABLED: "true"
+  ROCKET_PORT: "8070"
+  DOMAIN: "https://vaultwarden.home"
+
+adminToken:
+  existingSecret: vaultwarden-admin
+  key: admin-token
+
+sealedSecret:
+  enabled: true
+
+service:
+  type: ClusterIP
+  port: 8070
+
+ingress:
+  enabled: true
+  className: nginx
+  host: vaultwarden.home
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+
+persistence:
+  data:
+    enabled: true
+    storageClass: nfs-client
+    size: 5Gi
+    accessMode: ReadWriteOnce
+    mountPath: /data
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  readOnlyRootFilesystem: true

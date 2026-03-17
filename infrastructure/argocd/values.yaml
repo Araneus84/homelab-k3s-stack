@@ -1,0 +1,68 @@
+argo-cd:
+  # --- Server ---
+  server:
+    # Ingress for ArgoCD UI
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - argocd.home
+      tls: []
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+
+    # Run insecure (TLS terminated at ingress)
+    extraArgs:
+      - --insecure
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+  # --- Repo Server ---
+  repoServer:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+
+  # --- Application Controller ---
+  controller:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+
+  # --- Redis ---
+  redis:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+
+  # --- Dex (SSO) ---
+  dex:
+    enabled: false   # Not needed for homelab
+
+  # --- Notifications ---
+  notifications:
+    enabled: false   # Enable later if needed
+
+  # --- Global ---
+  global:
+    # Default project
+    domain: argocd.home

@@ -1,0 +1,56 @@
+# Sonarr TV series management configuration
+replicaCount: 1
+
+image:
+  repository: lscr.io/linuxserver/sonarr
+  tag: "4.0.11"
+  pullPolicy: IfNotPresent
+
+# Environment
+env:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "Asia/Jerusalem"
+
+service:
+  type: ClusterIP
+  port: 8989
+
+ingress:
+  enabled: true
+  className: nginx
+  host: sonarr.home
+
+# Persistent storage for Sonarr config
+persistence:
+  config:
+    enabled: true
+    storageClass: nfs-client
+    size: 5Gi
+    accessMode: ReadWriteOnce
+
+# NFS volumes for media from NAS
+nfsMedia:
+  enabled: true
+  server: "nas.home"
+  downloads:
+    path: /volume1/data/Downloads
+    mountPath: /downloads
+  media:
+    path: /volume1/data/Tv
+    mountPath: /tv
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+nodeSelector: {}
+tolerations: []

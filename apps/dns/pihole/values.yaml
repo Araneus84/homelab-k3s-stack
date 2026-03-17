@@ -1,0 +1,65 @@
+# Pi-hole DNS configuration
+replicaCount: 1
+
+image:
+  repository: pihole/pihole
+  tag: "2024.07.0"
+  pullPolicy: IfNotPresent
+
+# DNS service needs to be accessible on port 53
+service:
+  dns:
+    type: LoadBalancer
+    port: 53
+    # On bare metal k3s, use the node IP
+    # loadBalancerIP: 192.168.50.100  # Uncomment and set to your node IP
+  web:
+    type: ClusterIP
+    port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  host: pihole.home
+  annotations:
+    nginx.ingress.kubernetes.io/app-root: /admin
+
+# Environment variables
+env:
+  TZ: "Asia/Jerusalem"
+  FTLCONF_dns_listeningMode: "all"
+  VIRTUAL_HOST: "pihole.home"
+  WEB_PORT: "80"
+
+# Web admin password -- use sealed secret
+# Create with: kubectl create secret generic pihole-admin --from-literal=password=<your-password>
+existingSecret: pihole-admin
+
+persistence:
+  config:
+    enabled: true
+    storageClass: nfs-client
+    size: 2Gi
+    accessMode: ReadWriteOnce
+  dnsmasq:
+    enabled: true
+    storageClass: nfs-client
+    size: 500Mi
+    accessMode: ReadWriteOnce
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+securityContext:
+  capabilities:
+    add:
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+
+nodeSelector: {}
+tolerations: []

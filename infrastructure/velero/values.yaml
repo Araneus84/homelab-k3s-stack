@@ -1,0 +1,30 @@
+# Velero configuration for backups
+velero:
+  initContainers:
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.9.0
+      volumeMounts:
+        - mountPath: /target
+          name: plugins
+
+  configuration:
+    provider: aws
+    backupStorageLocation:
+      bucket: homelab-backups
+      config:
+        region: us-east-1
+        s3ForcePathStyle: true
+        s3Url: http://minio.minio.svc:9000  # Default to internal MinIO
+    volumeSnapshotLocation:
+      config:
+        region: us-east-1
+
+  credentials:
+    useSecret: true
+    secretContents:
+      cloud: |
+        [default]
+        aws_access_key_id = CHANGE_ME_MINIO_ACCESS_KEY
+        aws_secret_access_key = CHANGE_ME_MINIO_SECRET_KEY
+
+  deployNodeAgent: true  # Restic integration for PV backups
