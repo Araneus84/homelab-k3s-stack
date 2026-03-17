@@ -19,7 +19,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_USERNAME/homelab.git  # <-- Update with your repo
+    repoURL: https://github.com/Araneus84/homelab-k3s-stack.git  
     targetRevision: main
     path: argocd-apps
     directory:
