@@ -14,29 +14,29 @@
 ### Architecture (high level)
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph cluster["Kubernetes Cluster"]
         subgraph infra["Infrastructure"]
             velero["Velero\nBackup & Restore"]
         end
         subgraph media["Media Stack"]
-            plex["Plex"]
+            overseerr["Overseerr"]
+            prowlarr["Prowlarr"]
             radarr["Radarr"]
             sonarr["Sonarr"]
             qbit["qBittorrent"]
-            overseerr["Overseerr"]
-            prowlarr["Prowlarr"]
+            plex["Plex"]
         end
     end
-    velero -.->|backups| cluster
-    plex --> radarr
-    plex --> sonarr
-    overseerr --> radarr
-    overseerr --> sonarr
-    prowlarr --> radarr
-    prowlarr --> sonarr
-    qbit --> radarr
-    qbit --> sonarr
+    overseerr -->|requests| radarr
+    overseerr -->|requests| sonarr
+    prowlarr -->|indexers| radarr
+    prowlarr -->|indexers| sonarr
+    radarr -->|download jobs| qbit
+    sonarr -->|download jobs| qbit
+    radarr -->|library| plex
+    sonarr -->|library| plex
+    velero -.->|backups| media
 ```
 
 ---
