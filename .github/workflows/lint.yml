@@ -12,11 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Ansible Lint
-        run: pip install ansible-lint
+      - name: Install Ansible + Collections
+        run: |
+          pip install ansible ansible-lint
+          ansible-galaxy collection install ansible.posix community.general
 
       - name: Run Ansible Lint
-        run: ansible-lint ansible/
+        run: ansible-lint ansible/roles
 
   helm-lint:
     runs-on: ubuntu-latest
