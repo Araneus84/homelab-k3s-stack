@@ -16,9 +16,6 @@ spec:
       labels:
         {{- include "overseerr.selectorLabels" . | nindent 8 }}
     spec:
-      securityContext:
-        runAsUser: {{ .Values.securityContext.runAsUser }}
-        runAsGroup: {{ .Values.securityContext.runAsGroup }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
