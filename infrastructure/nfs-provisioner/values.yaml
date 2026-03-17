@@ -4,8 +4,7 @@ nfs-subdir-external-provisioner:
     server: "192.168.50.110"    # <-- Change to your NAS IP
     path: /mnt/HD/HD_a2/NAS   # Base folder for all k3s PVC data
 
-  nfs-subdir-external-provisioner:
-    pathPattern: "homelab_k3s_stack/${.PVC.Namespace}/${.PVC.Name}"
+  pathPattern: "homelab_k3s_stack/${.PVC.Namespace}/${.PVC.Name}"
 
   storageClass:
     name: nfs-client
