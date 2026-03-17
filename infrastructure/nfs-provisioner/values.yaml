@@ -4,13 +4,13 @@ nfs-subdir-external-provisioner:
     server: "192.168.50.110"    # <-- Change to your NAS IP
     path: /mnt/HD/HD_a2/NAS   # Base folder for all k3s PVC data
 
-  pathPattern: "homelab_k3s_stack/${.PVC.namespace}/${.PVC.name}"
 
   storageClass:
     name: nfs-client
     defaultClass: true
     reclaimPolicy: Retain     # Keep data on PV deletion
     archiveOnDelete: true     # Move data to archived-* on delete
+    pathPattern: "homelab_k3s_stack/${.PVC.namespace}/${.PVC.name}"
 
   # Resource limits
   resources:
