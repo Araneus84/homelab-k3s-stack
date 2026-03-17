@@ -30,5 +30,15 @@ jobs:
 
       - name: Lint Helm Charts
         run: |
-          helm lint apps/*
-          helm lint infrastructure/*
+          # Lint all charts
+          for chart in $(find apps -name Chart.yaml -print); do
+            chart_dir=$(dirname "$chart")
+            echo "=== Helm lint $chart_dir ==="
+            helm lint $chart_dir
+          done
+
+          for chart in $(find infrastructure -name Chart.yaml -print); do
+            chart_dir=$(dirname "$chart")
+            echo "=== Helm lint $chart_dir ==="
+            helm lint $chart_dir
+          done
