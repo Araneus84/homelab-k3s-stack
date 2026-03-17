@@ -23,11 +23,11 @@
   when: nfs_server is defined
 
 - name: Set timezone
-  ansible.builtin.timezone:
+  community.general.timezone:
     name: "{{ timezone }}"
 
 - name: Configure locale
-  ansible.builtin.locale_gen:
+  community.general.locale_gen:
     name: "{{ locale }}"
     state: present
 
@@ -60,7 +60,7 @@
   notify: reload systemd
 
 - name: Load required kernel modules
-  ansible.builtin.modprobe:
+  community.general.modprobe:
     name: "{{ item }}"
     state: present
   loop:
