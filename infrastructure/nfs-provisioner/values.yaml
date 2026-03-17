@@ -1,8 +1,8 @@
 nfs-subdir-external-provisioner:
   # NFS server details -- UPDATE THESE to match your NAS
   nfs:
-    server: "nas.home"    # <-- Change to your NAS IP
-    path: /volume1/k8s-data   # <-- Change to your NAS export path
+    server: "192.168.50.110"    # <-- Change to your NAS IP
+    path: /mnt/HD/HD_a2/NAS   # <-- Change to your NAS export path
 
   storageClass:
     name: nfs-client
