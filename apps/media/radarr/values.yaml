@@ -34,11 +34,11 @@ nfsMedia:
   enabled: true
   server: "192.168.50.110"
   downloads:
-    path: /mnt/HD/HD_a2/NAS/downloads
-    mountPath: /downloads
+    path: /mnt/HD/HD_a2/NAS
+    mountPath: /mnt/nas
   media:
-    path: /mnt/HD/HD_a2/NAS/Movies
-    mountPath: /Movies
+    path: /mnt/HD/HD_a2/NAS
+    mountPath: /mnt/nas
 
 resources:
   requests:
