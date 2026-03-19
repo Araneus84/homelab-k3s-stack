@@ -24,7 +24,9 @@ spec:
         # interface constraints on every startup so Pi-hole can answer on
         # whichever interface is currently available.
         - name: fix-pihole-interface-constraints
-          image: busybox:1.37
+          # Use the same Pi-hole image to avoid extra registry pulls
+          # (the cluster may not be able to reach Docker Hub).
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command:
             - sh
             - -c
