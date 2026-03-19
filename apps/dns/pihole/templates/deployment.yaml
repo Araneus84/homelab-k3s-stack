@@ -32,21 +32,15 @@ spec:
             - sh
             - -c
             - >
-              IFACE="$(ip route 2>/dev/null | awk '/default/ {print $5; exit}')"; \
-              if [ -z "$IFACE" ]; then \
-                # Fallback: pick the first non-loopback interface that is UP.
-                IFACE="$(ip -o link show up 2>/dev/null | awk '$2!=\"lo:\" {gsub(\":\",\"\",$2); print $2; exit}')"; \
-              fi; \
-              if [ -z "$IFACE" ]; then IFACE="lo"; fi; \
-              for f in /etc/pihole/setupVars.conf /etc/pihole/setupVars.conf.update.bak; do \
-                if [ -f "$f" ]; then \
-                  sed -i '/^PIHOLE_INTERFACE=/d' "$f"; \
-                  echo "PIHOLE_INTERFACE=$IFACE" >> "$f"; \
-                fi; \
-              done; \
-              if [ -f /etc/dnsmasq.d/01-pihole.conf ]; then \
-                sed -i '/^interface=/d' /etc/dnsmasq.d/01-pihole.conf; \
-                echo "interface=$IFACE" >> /etc/dnsmasq.d/01-pihole.conf; \
+              for f in
+              /etc/pihole/setupVars.conf
+              /etc/pihole/setupVars.conf.update.bak; do
+                if [ -f "$f" ]; then
+                  sed -i '/^PIHOLE_INTERFACE=/d' "$f";
+                fi;
+              done;
+              if [ -f /etc/dnsmasq.d/01-pihole.conf ]; then
+                sed -i '/^interface=/d' /etc/dnsmasq.d/01-pihole.conf;
               fi
           volumeMounts:
             - name: pihole-config
