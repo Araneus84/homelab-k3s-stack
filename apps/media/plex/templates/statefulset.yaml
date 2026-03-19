@@ -17,10 +17,6 @@ spec:
     spec:
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: ClusterFirstWithHostNet
-      securityContext:
-        runAsUser: {{ .Values.securityContext.runAsUser }}
-        runAsGroup: {{ .Values.securityContext.runAsGroup }}
-        fsGroup: {{ .Values.securityContext.runAsGroup }}
       containers:
         - name: plex
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
