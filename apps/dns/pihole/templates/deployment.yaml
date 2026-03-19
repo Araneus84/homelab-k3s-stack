@@ -16,8 +16,6 @@ spec:
       labels:
         {{- include "pihole.selectorLabels" . | nindent 8 }}
     spec:
-      hostNetwork: {{ .Values.hostNetwork }}
-      dnsPolicy: {{ .Values.dnsPolicy }}
       containers:
         - name: pihole
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -42,17 +40,13 @@ spec:
               containerPort: 53
               protocol: UDP
             - name: http
-              containerPort: {{ .Values.service.web.targetPort | default .Values.service.web.port }}
+              containerPort: {{ .Values.service.web.port }}
               protocol: TCP
           volumeMounts:
             - name: pihole-config
               mountPath: /etc/pihole
             - name: dnsmasq-config
               mountPath: /etc/dnsmasq.d
-            - name: custom-dns
-              mountPath: /etc/dnsmasq.d/05-custom.conf
-              subPath: 05-custom.conf
-              readOnly: true
           livenessProbe:
             httpGet:
               path: /admin
@@ -76,9 +70,6 @@ spec:
         - name: dnsmasq-config
           persistentVolumeClaim:
             claimName: {{ include "pihole.fullname" . }}-dnsmasq
-        - name: custom-dns
-          configMap:
-            name: {{ include "pihole.fullname" . }}-custom-dns
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

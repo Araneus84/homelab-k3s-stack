@@ -6,7 +6,10 @@ metadata:
     {{- include "pihole.labels" . | nindent 4 }}
 data:
   05-custom.conf: |
-    {{- if .Values.localDns.enabled }}
-    # Homelab: route all *.home records to the k3s node IP.
-    address=/{{ .Values.localDns.domainSuffix }}/{{ .Values.localDns.ip }}
-    {{- end }}
+    # Local DNS overrides for homelab services.
+    # Example entries (uncomment and adjust as needed):
+    # address=/radarr.home/192.168.50.100
+    # address=/sonarr.home/192.168.50.100
+    # address=/prowlarr.home/192.168.50.100
+    # address=/overseerr.home/192.168.50.100
+    # address=/vaultwarden.home/192.168.50.100

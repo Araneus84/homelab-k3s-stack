@@ -11,7 +11,7 @@ service:
   dns:
     # Use hostNetwork to expose port 53 on the node IP directly.
     # This avoids LoadBalancer/MetalLB dependency for bare-metal k3s testing.
-    type: ClusterIP
+    type: LoadBalancer
     port: 53
     # On bare metal k3s, use the node IP
     # loadBalancerIP: 192.168.50.100  # Uncomment and set to your node IP
@@ -30,13 +30,9 @@ ingress:
 # dnsmasq local DNS overrides for homelab domains.
 # We route all *.home records to the k3s node IP so Ingress host rules work.
 localDns:
-  enabled: true
-  ip: "192.168.50.100"
-  domainSuffix: "home"
-
-# Run Pi-hole on the host network so port 53 is reachable from your LAN.
-hostNetwork: true
-dnsPolicy: ClusterFirstWithHostNet
+  enabled: false
+  ip: ""
+  domainSuffix: ""
 
 # Environment variables
 env:
