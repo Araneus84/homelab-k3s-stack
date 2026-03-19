@@ -26,6 +26,11 @@ kube-prometheus-stack:
       storageClassName: nfs-client
       size: 5Gi
 
+    # Your Grafana pod fails during init because NFS doesn't allow `chown`.
+    # Disabling init-chown lets Grafana start as user `472` with `fsGroup: 472`.
+    initChownData:
+      enabled: false
+
     # Resource limits
     resources:
       requests:
