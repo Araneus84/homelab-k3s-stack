@@ -34,10 +34,10 @@ ingress-nginx:
 
     # Important: do NOT use host ports while Docker still binds :80/:443
     hostPort:
-      enabled: false
+      enabled: true
 
     # Run on host network for direct port binding
-    hostNetwork: false
+    hostNetwork: true
 
     # Tolerate all taints (single-node cluster)
     tolerations:
