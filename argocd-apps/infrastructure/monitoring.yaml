@@ -13,6 +13,9 @@ spec:
     repoURL: https://github.com/Araneus84/homelab-k3s-stack.git
     targetRevision: main
     path: infrastructure/monitoring
+    helm:
+      # Ensures subchart resources stay monitoring-* (ignoreDifferences, Prometheus CR name).
+      releaseName: monitoring
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
