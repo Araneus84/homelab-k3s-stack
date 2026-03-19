@@ -16,6 +16,30 @@ spec:
       labels:
         {{- include "pihole.selectorLabels" . | nindent 8 }}
     spec:
+      initContainers:
+        - name: fix-pihole-interface-constraints
+          # Pi-hole ships dnsmasq config that may pin dns to `eth0`.
+          # On a Wi-Fi/LAN dual-homed host, that can break DNS for k8s
+          # clients (and DHCP clients). We rewrite it to the current
+          # default-route interface before Pi-hole starts.
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - >
+              IFACE="$(ip -o route show default 2>/dev/null | awk '{print $5; exit}')"; \
+              [ -z "$IFACE" ] && IFACE="$(ip -o link show up 2>/dev/null | awk '$2!="lo:"{gsub(":","",$2); print $2; exit}')"; \
+              [ -z "$IFACE" ] && IFACE="lo"; \
+              for f in /etc/pihole/setupVars.conf /etc/pihole/setupVars.conf.update.bak; do \
+                [ -f "$f" ] && sed -i '/^PIHOLE_INTERFACE=/d' "$f" && echo "PIHOLE_INTERFACE=$IFACE" >> "$f"; \
+              done; \
+              [ -f /etc/dnsmasq.d/01-pihole.conf ] && sed -i '/^interface=/d' /etc/dnsmasq.d/01-pihole.conf && echo "interface=$IFACE" >> /etc/dnsmasq.d/01-pihole.conf;
+          volumeMounts:
+            - name: pihole-config
+              mountPath: /etc/pihole
+            - name: dnsmasq-config
+              mountPath: /etc/dnsmasq.d
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       containers:

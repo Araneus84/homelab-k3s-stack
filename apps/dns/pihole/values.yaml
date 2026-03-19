@@ -1,5 +1,5 @@
 # Pi-hole DNS configuration
-replicaCount: 1
+replicaCount: 0
 
 image:
   repository: pihole/pihole
@@ -38,9 +38,6 @@ localDns:
 env:
   TZ: "Asia/Jerusalem"
   FTLCONF_dns_listeningMode: "all"
-  # Avoid hardcoding a specific interface name (e.g. eth0 vs Wi-Fi).
-  # When unset/empty, Pi-hole should not restrict dnsmasq to a single interface.
-  PIHOLE_INTERFACE: ""
   VIRTUAL_HOST: "pihole.home"
   WEB_PORT: "8081"
 

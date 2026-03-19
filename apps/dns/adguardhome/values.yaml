@@ -1,0 +1,51 @@
+# AdGuard Home DNS filtering configuration
+replicaCount: 1
+
+image:
+  repository: adguard/adguardhome
+  # Use the image default tag (latest) unless you pin it later.
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  dns:
+    type: LoadBalancer
+    port: 53
+  web:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: adguard.home
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+
+env:
+  # Keep container logs/debug consistent.
+  TZ: "Asia/Jerusalem"
+
+persistence:
+  conf:
+    enabled: true
+    storageClass: nfs-client
+    size: 1Gi
+    accessMode: ReadWriteOnce
+  work:
+    enabled: true
+    storageClass: nfs-client
+    size: 1Gi
+    accessMode: ReadWriteOnce
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+nodeSelector: {}
+tolerations: []
