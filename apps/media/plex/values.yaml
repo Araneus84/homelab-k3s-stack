@@ -44,13 +44,22 @@ nfsMedia:
     path: /mnt/HD/HD_a2/NAS
     mountPath: /mnt/nas
 
+# Plex is single-replica in this setup, so use vertical scaling.
+# requests = minimum guaranteed resources
+# limits   = maximum allowed resources
 resources:
   requests:
-    cpu: 500m
-    memory: 1Gi
+    cpu: 1000m
+    memory: 2Gi
   limits:
     cpu: 4000m
     memory: 4Gi
+
+# Keep Plex single-replica on this homelab setup.
+# It uses hostNetwork and fixed LAN ports, so horizontal autoscaling
+# would conflict on a single-node cluster.
+autoscaling:
+  enabled: false
 
 nodeSelector: {}
 tolerations: []

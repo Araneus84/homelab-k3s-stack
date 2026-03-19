@@ -35,5 +35,12 @@ resources:
     cpu: 500m
     memory: 256Mi
 
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
 strategy:
   type: Recreate

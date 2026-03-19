@@ -5,7 +5,9 @@ metadata:
   labels:
     {{- include "overseerr.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   strategy:
     type: {{ .Values.strategy.type }}
   selector:
