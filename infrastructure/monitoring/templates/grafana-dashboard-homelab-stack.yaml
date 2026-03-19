@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-homelab-stack
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  homelab-stack-overview.json: |
+{{ .Files.Get "dashboards/homelab-stack-overview.json" | indent 4 }}
