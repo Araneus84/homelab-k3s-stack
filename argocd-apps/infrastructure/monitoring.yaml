@@ -13,44 +13,9 @@ spec:
     repoURL: https://github.com/Araneus84/homelab-k3s-stack.git
     targetRevision: main
     path: infrastructure/monitoring
-    helm:
-      # Ensures subchart resources stay monitoring-* (ignoreDifferences, Prometheus CR name).
-      releaseName: monitoring
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
-  # kube-prometheus-stack: operator + admission webhooks mutate fields Argo would
-  # otherwise fight forever with ServerSideApply. Names assume Helm release name
-  # == Application name (metadata.name: monitoring).
-  ignoreDifferences:
-    - group: admissionregistration.k8s.io
-      kind: ValidatingWebhookConfiguration
-      name: monitoring-kube-prometheus-admission
-      jqPathExpressions:
-        - .webhooks[]?.clientConfig.caBundle
-    - group: admissionregistration.k8s.io
-      kind: MutatingWebhookConfiguration
-      name: monitoring-kube-prometheus-admission
-      jqPathExpressions:
-        - .webhooks[]?.clientConfig.caBundle
-    - group: apps
-      kind: Deployment
-      name: monitoring-kube-state-metrics
-      namespace: monitoring
-      jqPathExpressions:
-        - .spec.template.spec.containers[]?.resources
-    - group: apps
-      kind: DaemonSet
-      name: monitoring-prometheus-node-exporter
-      namespace: monitoring
-      jqPathExpressions:
-        - .spec.template.spec.containers[]?.resources
-    - group: monitoring.coreos.com
-      kind: Prometheus
-      name: monitoring-kube-prometheus-prometheus
-      namespace: monitoring
-      jqPathExpressions:
-        - .status
   syncPolicy:
     automated:
       prune: true
@@ -58,5 +23,3 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-      # Required so ignoreDifferences above is honored during SSA apply / diff
-      - RespectIgnoreDifferences=true
