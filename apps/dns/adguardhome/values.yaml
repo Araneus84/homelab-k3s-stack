@@ -1,5 +1,5 @@
 # AdGuard Home DNS filtering configuration
-replicaCount: 1
+replicaCount: 0
 
 image:
   repository: adguard/adguardhome
