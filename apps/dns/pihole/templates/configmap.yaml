@@ -5,9 +5,8 @@ metadata:
   labels:
     {{- include "pihole.labels" . | nindent 4 }}
 data:
-  # Custom local DNS records for homelab services
-  # Add your local DNS entries here
   05-custom.conf: |
-    # Local DNS for homelab services
-    # Format: address=/hostname/ip
-    # These will be populated once services have stable IPs
+    {{- if .Values.localDns.enabled }}
+    # Homelab: route all *.home records to the k3s node IP.
+    address=/{{ .Values.localDns.domainSuffix }}/{{ .Values.localDns.ip }}
+    {{- end }}
