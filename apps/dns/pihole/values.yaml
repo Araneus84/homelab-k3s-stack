@@ -11,7 +11,7 @@ service:
   dns:
     # Use hostNetwork to expose port 53 on the node IP directly.
     # This avoids LoadBalancer/MetalLB dependency for bare-metal k3s testing.
-    type: LoadBalancer
+    type: ClusterIP
     port: 53
     # On bare metal k3s, use the node IP
     # loadBalancerIP: 192.168.50.100  # Uncomment and set to your node IP
