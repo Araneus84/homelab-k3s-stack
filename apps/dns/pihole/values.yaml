@@ -1,5 +1,5 @@
 # Pi-hole DNS configuration
-replicaCount: 0
+replicaCount: 1
 
 image:
   repository: pihole/pihole
