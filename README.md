@@ -11,19 +11,20 @@
 
 ---
 
-### Architecture (high level)
+### Architecture (High-Level)
 
 ```mermaid
 flowchart LR
-    subgraph cluster["Kubernetes Cluster"]
-        subgraph infra["Infrastructure"]
-            velero["Velero\nBackup & Restore"]
-            pihole-dns["Pihole DNS\nDNS Control and filtering"]
-            argocd["ArgoCD\nGitOps Stack Manager"]
-            cert-manager["Cert-Manager"]
-            nginx-ingress["nginx-ngress controller"]
-            monitoring["Monitoring stack with promethius, grafana and loki in the future"]
+    subgraph cluster["Kubernetes Cluster (k3s)"]
+        subgraph infra["Infrastructure Layer"]
+            velero["Velero<br/>Backup & Restore"]
+            adguard-dns["AdGuard Home DNS<br/>DNS filtering"]
+            argocd["Argo CD<br/>GitOps deployment"]
+            cert-manager["cert-manager<br/>TLS Automation"]
+            nginx-ingress["nginx-ingress<br/>Ingress controller"]
+            monitoring["Monitoring<br/>Prometheus + Grafana + Loki (planned)"]
         end
+
         subgraph media["Media Stack"]
             overseerr["Overseerr"]
             prowlarr["Prowlarr"]
@@ -32,39 +33,57 @@ flowchart LR
             qbit["qBittorrent"]
             plex["Plex"]
         end
-        subgraph securit["Security Stack"]
-            vaultwarden["Vaultwarden Password Manager"]
-            sealedsecrets["SealedSecrets to store in k8s cluster"]
+
+        subgraph security["Security Layer"]
+            vaultwarden["Vaultwarden<br/>Password Manager"]
+            sealedsecrets["Sealed Secrets<br/>Encrypted secret manifests"]
         end
-        subgraph tools["Personal tools"]
-            homeassistant["Homeassistant app to control smart home"]
+
+        subgraph tools["Personal Tools"]
+            homeassistant["Home Assistant<br/>Smart Home Control"]
         end
     end
-    overseerr -->|requests| radarr
-    overseerr -->|requests| sonarr
+
+    overseerr -->|User Requests| radarr
+    overseerr -->|User Requests| sonarr
     prowlarr -->|indexers| radarr
     prowlarr -->|indexers| sonarr
     radarr -->|download jobs| qbit
     sonarr -->|download jobs| qbit
-    radarr -->|library| plex
-    sonarr -->|library| plex
-    velero -.->|backups| media
+    radarr -->|media library| plex
+    sonarr -->|media library| plex
+    velero -.->|scheduled backups| media
+
+    classDef infra fill:#e8f1ff,stroke:#2f6feb,stroke-width:1px,color:#102a43;
+    classDef media fill:#ecfff4,stroke:#1f883d,stroke-width:1px,color:#0f3d2e;
+    classDef security fill:#fff1f1,stroke:#cf222e,stroke-width:1px,color:#5a1b1b;
+    classDef tools fill:#fff8e6,stroke:#9a6700,stroke-width:1px,color:#4d3b00;
+    classDef core fill:#f5f0ff,stroke:#8250df,stroke-width:1px,color:#2b1a59;
+
+    class velero,adguard-dns,argocd,cert-manager,nginx-ingress,monitoring infra;
+    class overseerr,prowlarr,radarr,sonarr,plex media;
+    class vaultwarden,sealedsecrets security;
+    class homeassistant tools;
+    class qbit core;
 ```
 
 ---
 
-This repository contains my personal homelab setup, with a focus on **Kubernetes-based infrastructure**, **GitOps-friendly configuration**, and **self-hosted media / productivity services**. The goal of this project is to practice real-world infrastructure patterns and showcase my experience with container orchestration, automation, and operational best practices.
+This repository contains a Kubernetes-based homelab managed with GitOps principles. It focuses on reliable operations, clear service boundaries, and reproducible application deployment using Helm and Argo CD.
 
-This `README` is a **work in progress** and will be updated as the project evolves and additional components are added or refined.
+### Project Scope
 
-### High-Level Overview
+- **Platform**: k3s cluster with ingress, certificate management, and DNS filtering.
+- **Media Stack**: Plex, Sonarr, Radarr, qBittorrent, Overseerr, and Prowlarr.
+- **Security**: Sealed Secrets and self-hosted services such as Vaultwarden.
+- **Operations**: Backup and recovery workflows using Velero.
 
-- **Infrastructure**: Kubernetes-based homelab, managed via declarative configuration (e.g. Helm charts and `values.yaml` files).
-- **Backup & Recovery**: Velero configuration (see `infrastructure/velero/`) for cluster-level and persistent volume backups.
-- **Media Stack**: Self-hosted media applications (e.g. Plex, Radarr, Sonarr, qBittorrent, Overseerr, Prowlarr) managed via Helm values under `apps/media/`.
-- **Security & Secrets**: Sensitive configuration handled via sealed manifests (e.g. `vaultwarden-admin.sealed.yaml`) and `.gitignore` rules to keep secrets out of source control.
+### Recent Improvements
 
-As this environment grows, I will expand this document with architecture diagrams, deployment workflows, and more detailed service descriptions.
+- **In-cluster service communication**: Sonarr and Radarr connect to qBittorrent via Kubernetes Service DNS (`qbittorrent-web.media.svc:8080`) rather than ingress hosts.
+- **Shared storage consistency**: qBittorrent, Sonarr, and Radarr use the same NFS-backed mount path (`/mnt/nas`) to avoid path mapping/import issues.
+- **Structured GitOps layout**: Applications are defined through Argo CD app manifests in `argocd-apps/apps/` and Helm charts under `apps/`.
+- **Clear traffic separation**: Ingress hosts (`*.home`) are used for user access; internal Services are used for pod-to-pod communication.
 
 ### Technologies & Tools
 
@@ -79,10 +98,3 @@ As this environment grows, I will expand this document with architecture diagram
 - **Infrastructure as Code**: Clustering, apps, and backups are defined declaratively and can be reproduced.
 - **Operational Thinking**: Includes backup, restore, and data-protection concerns (Velero, persistent storage).
 - **Realistic Homelab Use Case**: Media stack and supporting services configured similarly to a production-like environment, but in a personal lab context.
-
-In future iterations, this `README` will include:
-
-- A more detailed **architecture overview** (networking, storage, and security layers).
-- **How to deploy** this stack from scratch.
-- Notes on **trade-offs and design decisions** made along the way.
-
