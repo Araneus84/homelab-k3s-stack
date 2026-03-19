@@ -46,7 +46,9 @@ kube-prometheus-stack:
         enabled: true
         label: grafana_dashboard
         labelValue: "1"
-        searchNamespace: ALL
+        # List form matches Grafana chart. Templated by Grafana subchart = installs with any release namespace.
+        searchNamespace:
+          - "{{ .Release.Namespace }}"
 
   # --- Prometheus ---
   prometheus:
