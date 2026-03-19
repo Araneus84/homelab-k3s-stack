@@ -28,11 +28,6 @@ ingress:
   enabled: true
   className: nginx
   host: vaultwarden.home
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "X-Content-Type-Options: nosniff";
-      more_set_headers "X-Frame-Options: SAMEORIGIN";
-      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
 
 persistence:
   data:
