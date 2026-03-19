@@ -27,6 +27,7 @@ spec:
           # Use the same Pi-hole image to avoid extra registry pulls
           # (the cluster may not be able to reach Docker Hub).
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - sh
             - -c
