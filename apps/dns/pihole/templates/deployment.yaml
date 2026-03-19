@@ -42,7 +42,7 @@ spec:
               containerPort: 53
               protocol: UDP
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.service.web.targetPort | default .Values.service.web.port }}
               protocol: TCP
           volumeMounts:
             - name: pihole-config

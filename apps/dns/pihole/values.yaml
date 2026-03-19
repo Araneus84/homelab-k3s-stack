@@ -18,6 +18,7 @@ service:
   web:
     type: ClusterIP
     port: 80
+    targetPort: 8081
 
 ingress:
   enabled: true
@@ -42,7 +43,7 @@ env:
   TZ: "Asia/Jerusalem"
   FTLCONF_dns_listeningMode: "all"
   VIRTUAL_HOST: "pihole.home"
-  WEB_PORT: "80"
+  WEB_PORT: "8081"
 
 # Web admin password -- use sealed secret
 # Create with: kubectl create secret generic pihole-admin --from-literal=password=<your-password>
