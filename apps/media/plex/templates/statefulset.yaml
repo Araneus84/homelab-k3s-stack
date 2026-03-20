@@ -59,11 +59,8 @@ spec:
             - name: config
               mountPath: /config
             {{- if .Values.nfsMedia.enabled }}
-            - name: movies
-              mountPath: {{ .Values.nfsMedia.movies.mountPath }}
-              readOnly: true
-            - name: tv
-              mountPath: {{ .Values.nfsMedia.tv.mountPath }}
+            - name: media
+              mountPath: {{ .Values.nfsMedia.mountPath }}
               readOnly: true
             {{- end }}
             - name: transcode
@@ -74,12 +71,14 @@ spec:
               port: plex
             initialDelaySeconds: 120
             periodSeconds: 30
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /web/index.html
               port: plex
             initialDelaySeconds: 60
             periodSeconds: 10
+            timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -87,15 +86,10 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "plex.fullname" . }}-config
         {{- if .Values.nfsMedia.enabled }}
-        - name: movies
+        - name: media
           nfs:
             server: {{ .Values.nfsMedia.server }}
-            path: {{ .Values.nfsMedia.movies.path }}
-            readOnly: true
-        - name: tv
-          nfs:
-            server: {{ .Values.nfsMedia.server }}
-            path: {{ .Values.nfsMedia.tv.path }}
+            path: {{ .Values.nfsMedia.path }}
             readOnly: true
         {{- end }}
         - name: transcode

@@ -33,16 +33,12 @@ persistence:
     size: 20Gi
     accessMode: ReadWriteOnce
 
-# NFS volumes for media (read-only mounts from NAS)
+# Single read-only NFS mount for media (one mountPath; do not duplicate mounts to the same path)
 nfsMedia:
   enabled: true
   server: "192.168.50.110"
-  movies:
-    path: /mnt/HD/HD_a2/NAS
-    mountPath: /mnt/nas
-  tv:
-    path: /mnt/HD/HD_a2/NAS
-    mountPath: /mnt/nas
+  path: /mnt/HD/HD_a2/NAS
+  mountPath: /mnt/nas
 
 # Plex is single-replica in this setup, so use vertical scaling.
 # requests = minimum guaranteed resources
