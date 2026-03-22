@@ -10,4 +10,18 @@ data:
 {{ tpl (.Files.Get "files/services.yaml") . | nindent 4 }}
   settings.yaml: |
 {{ tpl (.Files.Get "files/settings.yaml") . | nindent 4 }}
+  bookmarks.yaml: |
+{{ .Files.Get "files/bookmarks.yaml" | nindent 4 }}
+  widgets.yaml: |
+{{ .Files.Get "files/widgets.yaml" | nindent 4 }}
+  docker.yaml: |
+{{ .Files.Get "files/docker.yaml" | nindent 4 }}
+  kubernetes.yaml: |
+{{ .Files.Get "files/kubernetes.yaml" | nindent 4 }}
+  proxmox.yaml: |
+{{ .Files.Get "files/proxmox.yaml" | nindent 4 }}
+  custom.css: |
+{{ .Files.Get "files/custom.css" | nindent 4 }}
+  custom.js: |
+{{ .Files.Get "files/custom.js" | nindent 4 }}
 {{- end }}
