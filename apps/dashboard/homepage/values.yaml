@@ -13,6 +13,10 @@ env:
   PUID: "1000"
   PGID: "1000"
 
+# HOMEPAGE_ALLOWED_HOSTS: comma-separated Host headers allowed (v1.0+). Include ingress host;
+# add * so browser requests via LAN IP / alternate names work. Tighten to specific IPs if you prefer.
+allowedHosts: "homepage.home,*"
+
 service:
   type: ClusterIP
   port: 3000

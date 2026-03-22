@@ -27,6 +27,8 @@ spec:
               value: {{ .Values.env.PUID | quote }}
             - name: PGID
               value: {{ .Values.env.PGID | quote }}
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: {{ .Values.allowedHosts | quote }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
