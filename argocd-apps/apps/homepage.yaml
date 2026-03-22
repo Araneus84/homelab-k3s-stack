@@ -3,10 +3,6 @@ kind: Application
 metadata:
   name: homepage
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: homepage=ghcr.io/gethomepage/homepage
-    argocd-image-updater.argoproj.io/homepage.update-strategy: semver
-    argocd-image-updater.argoproj.io/homepage.allow-tags: regexp:^v[0-9].*
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

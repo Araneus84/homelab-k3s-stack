@@ -122,4 +122,3 @@ This repository contains a Kubernetes-based homelab managed with GitOps (Argo CD
 
 - [docs/setup.md](docs/setup.md) — Ansible, bootstrap, sealed secrets, DNS.
 - [docs/architecture.md](docs/architecture.md) — Topology, namespaces, ingress table, sync waves, security.
-- [docs/hand-holding-guide.md](docs/hand-holding-guide.md) — Guided walkthrough from bare node to synced Argo CD apps.

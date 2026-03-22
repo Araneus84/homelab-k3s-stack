@@ -1,4 +1,10 @@
 kube-prometheus-stack:
+  # Longer TTL so Argo can observe admission hook Jobs before Kubernetes GC.
+  prometheusOperator:
+    admissionWebhooks:
+      patch:
+        ttlSecondsAfterFinished: 300
+
   # --- Grafana ---
   grafana:
     enabled: true
