@@ -1,0 +1,5 @@
+# Templated by Helm
+title: {{ .Values.homepageTitle | default "Homelab" | quote }}
+theme: dark
+color: slate
+headerStyle: boxed

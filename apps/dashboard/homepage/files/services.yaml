@@ -1,0 +1,69 @@
+# Templated by Helm — see values.yaml `urls` and `monitoring.prometheus.url`
+- Monitoring:
+    - Prometheus:
+        icon: si-prometheus
+        description: Scrape targets (cluster + apps)
+        widget:
+          type: prometheus
+          url: {{ .Values.monitoring.prometheus.url }}
+    - Grafana:
+        icon: si-grafana
+        href: {{ .Values.urls.grafana }}
+        description: Dashboards & alerts
+    - Argo CD:
+        icon: si-argocd
+        href: {{ .Values.urls.argocd }}
+        description: GitOps / sync status
+
+- Dashboard:
+    - Homepage:
+        icon: si-homepage
+        href: {{ .Values.urls.homepage }}
+        description: This dashboard
+
+- DNS:
+    - AdGuard Home:
+        icon: si-adguard
+        href: {{ .Values.urls.adguard }}
+        description: DNS filtering
+    - Pi-hole:
+        icon: pi-hole
+        href: {{ .Values.urls.pihole }}
+        description: DNS / DHCP
+
+- Media:
+    - Plex:
+        icon: si-plex
+        href: {{ .Values.urls.plex }}
+        description: Media server (no ingress — web app)
+    - Overseerr:
+        icon: overseerr
+        href: {{ .Values.urls.overseerr }}
+        description: Requests
+    - Sonarr:
+        icon: si-sonarr
+        href: {{ .Values.urls.sonarr }}
+    - Radarr:
+        icon: si-radarr
+        href: {{ .Values.urls.radarr }}
+    - Prowlarr:
+        icon: si-prowlarr
+        href: {{ .Values.urls.prowlarr }}
+    - qBittorrent:
+        icon: si-qbittorrent
+        href: {{ .Values.urls.qbittorrent }}
+    - Autobrr:
+        icon: autobrr
+        href: {{ .Values.urls.autobrr }}
+    - FlareSolverr:
+        icon: mdi-cloud-sync
+        href: {{ .Values.urls.flaresolverr }}
+        description: Cloudflare challenge solver
+
+- Home & security:
+    - Home Assistant:
+        icon: si-homeassistant
+        href: {{ .Values.urls.homeassistant }}
+    - Vaultwarden:
+        icon: si-vaultwarden
+        href: {{ .Values.urls.vaultwarden }}

@@ -39,6 +39,15 @@ spec:
             - name: config
               mountPath: /app/config
       volumes:
+{{- if .Values.bundleConfig }}
+        - name: config
+          configMap:
+            name: {{ include "homepage.fullname" . }}-config-files
+{{- else if .Values.persistence.config.enabled }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "homepage.fullname" . }}-config
+{{- else }}
+        - name: config
+          emptyDir: {}
+{{- end }}

@@ -17,6 +17,35 @@ env:
 # add * so browser requests via LAN IP / alternate names work. Tighten to specific IPs if you prefer.
 allowedHosts: "homepage.home,*"
 
+# Git-tracked config (ConfigMap): full stack + Prometheus widget for scrape-target health.
+# Set false to use PVC-only config (legacy / hand-edited files on disk).
+bundleConfig: true
+
+homepageTitle: Homelab
+
+# Match your ingress hostnames (http — TLS may be at ingress or external).
+urls:
+  homepage: http://homepage.home
+  argocd: http://argocd.home
+  grafana: http://grafana.home
+  adguard: http://adguard.home
+  pihole: http://pihole.home
+  autobrr: http://autobrr.home
+  flaresolverr: http://flaresolverr.home
+  overseerr: http://overseerr.home
+  prowlarr: http://prowlarr.home
+  radarr: http://radarr.home
+  sonarr: http://sonarr.home
+  qbittorrent: http://qbit.home
+  vaultwarden: http://vaultwarden.home
+  homeassistant: http://ha.home
+  plex: https://app.plex.tv
+
+# In-cluster Prometheus API URL (Homepage calls this from the pod; not your browser).
+monitoring:
+  prometheus:
+    url: http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090
+
 service:
   type: ClusterIP
   port: 3000
@@ -28,7 +57,8 @@ ingress:
 
 persistence:
   config:
-    enabled: true
+    # When bundleConfig is true, PVC is not used for /app/config (config comes from ConfigMap).
+    enabled: false
     storageClass: local-path-homelab
     size: 1Gi
     accessMode: ReadWriteOnce
