@@ -27,6 +27,7 @@ k3s.yaml
 Thumbs.db
 
 # IDE
+.cursor/
 .vscode/
 .idea/
 *.swp

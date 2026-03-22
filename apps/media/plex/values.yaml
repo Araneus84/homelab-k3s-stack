@@ -29,7 +29,7 @@ service:
 persistence:
   config:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 20Gi
     accessMode: ReadWriteOnce
 
