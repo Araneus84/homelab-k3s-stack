@@ -1,0 +1,23 @@
+# Copy pieces into the Homepage PVC file /app/config/widgets.yaml (merge with the skeleton).
+# Docs: https://gethomepage.dev/configs/info-widgets/
+
+- search:
+    provider: duckduckgo
+    target: _blank
+
+# Datetime (no secrets).
+- datetime:
+    text_size: xl
+    format:
+      dateStyle: short
+      timeStyle: short
+
+# Grafana stats need API credentials — use secrets.yaml (HOMEPAGE_VAR_*) or the widget’s fields;
+# see https://gethomepage.dev/widgets/services/grafana/
+#
+# - grafana:
+#     url: http://grafana.home
+#     username: admin
+#     password: "{{HOMEPAGE_VAR_GRAFANA_PASSWORD}}"
+
+# Logs: use Grafana → Explore (Loki). Homepage has no first-class Loki log tail widget.

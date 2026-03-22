@@ -21,10 +21,17 @@ service:
     type: NodePort
     port: 6881
 
+homepageDiscovery:
+  enabled: true
+  name: qBittorrent
+  group: Media
+  icon: si-qbittorrent
+
 ingress:
   enabled: true
   className: nginx
   host: qbit.home
+  annotations: {}
 
 persistence:
   config:

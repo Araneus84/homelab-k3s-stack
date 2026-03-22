@@ -15,10 +15,17 @@ service:
   type: ClusterIP
   port: 7474
 
+homepageDiscovery:
+  enabled: true
+  name: Autobrr
+  group: Media
+  icon: autobrr
+
 ingress:
   enabled: true
   className: nginx
   host: autobrr.home
+  annotations: {}
 
 persistence:
   config:

@@ -16,6 +16,26 @@ spec:
       labels:
         {{- include "homepage.selectorLabels" . | nindent 8 }}
     spec:
+{{- if .Values.kubernetesDiscovery.enabled }}
+      serviceAccountName: {{ include "homepage.fullname" . }}
+{{- end }}
+{{- if .Values.kubernetesDiscovery.enabled }}
+      initContainers:
+        - name: homepage-k8s-config
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              if [ ! -f /config/kubernetes.yaml ]; then
+                printf '%s\n' '---' 'mode: cluster' 'ingress: true' > /config/kubernetes.yaml
+              fi
+          volumeMounts:
+            - name: config
+              mountPath: /config
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -39,11 +59,7 @@ spec:
             - name: config
               mountPath: /app/config
       volumes:
-{{- if .Values.bundleConfig }}
-        - name: config
-          configMap:
-            name: {{ include "homepage.fullname" . }}-config-files
-{{- else if .Values.persistence.config.enabled }}
+{{- if .Values.persistence.config.enabled }}
         - name: config
           persistentVolumeClaim:
             claimName: {{ include "homepage.fullname" . }}-config

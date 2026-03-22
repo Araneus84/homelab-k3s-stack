@@ -1,5 +1,0 @@
-# From gethomepage/homepage v1.7.0 skeleton — no in-cluster discovery unless you set mode.
-# https://gethomepage.dev/configs/kubernetes/
-
----
-# sample kubernetes config

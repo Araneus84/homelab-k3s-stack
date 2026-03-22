@@ -16,10 +16,17 @@ service:
   type: ClusterIP
   port: 8989
 
+homepageDiscovery:
+  enabled: true
+  name: Sonarr
+  group: Media
+  icon: si-sonarr
+
 ingress:
   enabled: true
   className: nginx
   host: sonarr.home
+  annotations: {}
 
 # Persistent storage for Sonarr config
 persistence:

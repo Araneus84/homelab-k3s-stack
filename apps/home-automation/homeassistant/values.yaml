@@ -18,10 +18,17 @@ service:
   type: ClusterIP
   port: 8123
 
+homepageDiscovery:
+  enabled: true
+  name: Home Assistant
+  group: Home
+  icon: si-homeassistant
+
 ingress:
   enabled: true
   className: nginx
   host: ha.home
+  annotations: {}
 
 persistence:
   config:

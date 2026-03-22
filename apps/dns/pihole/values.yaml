@@ -20,6 +20,12 @@ service:
     port: 80
     targetPort: 8081
 
+homepageDiscovery:
+  enabled: true
+  name: Pi-hole
+  group: DNS
+  icon: pi-hole
+
 ingress:
   enabled: true
   className: nginx

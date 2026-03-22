@@ -16,6 +16,12 @@ service:
     port: 80
     targetPort: 3000
 
+homepageDiscovery:
+  enabled: true
+  name: AdGuard Home
+  group: DNS
+  icon: si-adguard
+
 ingress:
   enabled: true
   className: nginx

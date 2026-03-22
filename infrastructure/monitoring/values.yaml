@@ -10,6 +10,11 @@ kube-prometheus-stack:
       hosts:
         - grafana.home
       tls: []
+      annotations:
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/name: Grafana
+        gethomepage.dev/group: Monitoring
+        gethomepage.dev/icon: si-grafana
 
     # Default admin credentials are managed via sealed secret
     # Override with environment variables in production

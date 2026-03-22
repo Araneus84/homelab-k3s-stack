@@ -24,10 +24,17 @@ service:
   type: ClusterIP
   port: 8070
 
+homepageDiscovery:
+  enabled: true
+  name: Vaultwarden
+  group: Security
+  icon: si-vaultwarden
+
 ingress:
   enabled: true
   className: nginx
   host: vaultwarden.home
+  annotations: {}
 
 persistence:
   data:

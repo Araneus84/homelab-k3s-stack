@@ -16,10 +16,17 @@ service:
   type: ClusterIP
   port: 7878
 
+homepageDiscovery:
+  enabled: true
+  name: Radarr
+  group: Media
+  icon: si-radarr
+
 ingress:
   enabled: true
   className: nginx
   host: radarr.home
+  annotations: {}
 
 # Persistent storage for Radarr config
 persistence:

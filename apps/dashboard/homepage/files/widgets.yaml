@@ -1,6 +1,0 @@
-# Header widgets only (no `resources` here: disk/CPU calls often fail or misbehave in K8s).
-# https://gethomepage.dev/configs/info-widgets/
-
-- search:
-    provider: duckduckgo
-    target: _blank

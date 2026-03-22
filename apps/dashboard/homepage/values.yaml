@@ -14,31 +14,13 @@ env:
   PGID: "1000"
 
 # HOMEPAGE_ALLOWED_HOSTS: comma-separated Host headers allowed (v1.0+). Include ingress host;
-# add * so browser requests via LAN IP / alternate names work. Tighten to specific IPs if you prefer.
+# add * so browser requests via LAN IP / alternate names work.
 allowedHosts: "homepage.home,*"
 
-# Git-tracked config (ConfigMap). Set false for PVC-only / hand-edited /app/config.
-bundleConfig: true
-
-homepageTitle: Homelab
-
-# Match your ingress hostnames (http — TLS may be at ingress or external).
-urls:
-  homepage: http://homepage.home
-  argocd: http://argocd.home
-  grafana: http://grafana.home
-  adguard: http://adguard.home
-  pihole: http://pihole.home
-  autobrr: http://autobrr.home
-  flaresolverr: http://flaresolverr.home
-  overseerr: http://overseerr.home
-  prowlarr: http://prowlarr.home
-  radarr: http://radarr.home
-  sonarr: http://sonarr.home
-  qbittorrent: http://qbit.home
-  vaultwarden: http://vaultwarden.home
-  homeassistant: http://ha.home
-  plex: https://app.plex.tv
+# List/watch Ingresses cluster-wide so Homepage can discover annotated ingresses (gethomepage.dev/*).
+# Init seeds kubernetes.yaml with mode: cluster only if that file is missing (fresh PVC).
+kubernetesDiscovery:
+  enabled: true
 
 service:
   type: ClusterIP
@@ -48,11 +30,20 @@ ingress:
   enabled: true
   className: nginx
   host: homepage.home
+  annotations: {}
 
+# Self-annotation for Kubernetes discovery (same keys as other apps).
+homepageDiscovery:
+  enabled: true
+  name: Homepage
+  group: Dashboard
+  icon: si-homepage
+
+# Writable /app/config — Homepage copies skeleton YAML on first start; you edit widgets/services there.
+# If you used the old ConfigMap bundle, delete the homepage *-config PVC once so this chart can seed kubernetes.yaml.
 persistence:
   config:
-    # When bundleConfig is true, PVC is not used for /app/config (config comes from ConfigMap).
-    enabled: false
+    enabled: true
     storageClass: local-path-homelab
     size: 1Gi
     accessMode: ReadWriteOnce

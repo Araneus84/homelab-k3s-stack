@@ -1,8 +1,0 @@
-# From gethomepage/homepage v1.7.0 skeleton (optional; all commented).
-# https://gethomepage.dev/configs/proxmox/
-
----
-# pve:
-#   url: https://proxmox.host.or.ip:8006
-#   token: username@pam!Token ID
-#   secret: secret

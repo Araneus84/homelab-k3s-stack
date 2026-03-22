@@ -16,10 +16,17 @@ service:
   type: ClusterIP
   port: 8191
 
+homepageDiscovery:
+  enabled: true
+  name: FlareSolverr
+  group: Media
+  icon: mdi-cloud-sync
+
 ingress:
   enabled: true
   className: nginx
   host: flaresolverr.home
+  annotations: {}
 
 resources:
   requests:
