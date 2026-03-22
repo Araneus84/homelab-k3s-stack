@@ -1,0 +1,15 @@
+{{- if .Values.pilots.enabled }}
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: homelab-pilots
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: homelab
+spec:
+  applicationRefs:
+    - namePattern: homepage
+      useAnnotations: true
+    - namePattern: flaresolverr
+      useAnnotations: true
+{{- end }}

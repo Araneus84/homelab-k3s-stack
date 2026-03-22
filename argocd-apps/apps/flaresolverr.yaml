@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flaresolverr
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: flaresolverr=ghcr.io/flaresolverr/flaresolverr
+    argocd-image-updater.argoproj.io/flaresolverr.update-strategy: semver
+    argocd-image-updater.argoproj.io/flaresolverr.allow-tags: regexp:^v[0-9].*
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Araneus84/homelab-k3s-stack.git
+    targetRevision: main
+    path: apps/media/flaresolverr
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: media
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

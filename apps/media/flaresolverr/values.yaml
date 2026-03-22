@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/flaresolverr/flaresolverr
+  tag: "v3.3.21"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+env:
+  TZ: "Asia/Jerusalem"
+  LOG_LEVEL: "info"
+
+service:
+  type: ClusterIP
+  port: 8191
+
+ingress:
+  enabled: false
+  className: nginx
+  host: flaresolverr.home
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+strategy:
+  type: Recreate

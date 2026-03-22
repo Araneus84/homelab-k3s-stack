@@ -1,0 +1,27 @@
+pilots:
+  enabled: true
+
+# Subchart: argo/argocd-image-updater (operator v1.x).
+# Git write-back: set config.git.user / config.git.email and mount a deploy key or PAT (see upstream chart docs).
+# Default behavior targets the in-cluster Argo CD API in namespace `argocd`.
+
+argocd-image-updater:
+  replicaCount: 1
+  createClusterRoles: true
+  rbac:
+    enabled: true
+
+  tolerations:
+    - operator: Exists
+
+  config:
+    argocd.namespace: argocd
+    log.level: info
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

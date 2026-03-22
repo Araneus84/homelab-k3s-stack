@@ -1,0 +1,39 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/autobrr/autobrr
+  tag: "v1.64.0"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+env:
+  TZ: "Asia/Jerusalem"
+
+service:
+  type: ClusterIP
+  port: 7474
+
+ingress:
+  enabled: true
+  className: nginx
+  host: autobrr.home
+
+persistence:
+  config:
+    enabled: true
+    storageClass: local-path-homelab
+    size: 2Gi
+    accessMode: ReadWriteOnce
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+strategy:
+  type: Recreate
