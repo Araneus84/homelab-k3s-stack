@@ -29,9 +29,9 @@ spec:
             - -c
             - |
               set -e
-              if [ ! -f /config/kubernetes.yaml ]; then
-                printf '%s\n' '---' 'mode: cluster' 'ingress: true' > /config/kubernetes.yaml
-              fi
+              # Always write: a leftover skeleton kubernetes.yaml (comments only) does not set
+              # mode: cluster, so discovery stays off and the UI looks empty.
+              printf '%s\n' '---' 'mode: cluster' 'ingress: true' > /config/kubernetes.yaml
           volumeMounts:
             - name: config
               mountPath: /config

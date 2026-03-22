@@ -18,7 +18,8 @@ env:
 allowedHosts: "homepage.home,*"
 
 # List/watch Ingresses cluster-wide so Homepage can discover annotated ingresses (gethomepage.dev/*).
-# Init seeds kubernetes.yaml with mode: cluster only if that file is missing (fresh PVC).
+# Init overwrites /app/config/kubernetes.yaml with mode: cluster whenever this is true (chart-managed).
+# Set false if you edit kubernetes.yaml by hand or do not want cluster RBAC on the Homepage pod.
 kubernetesDiscovery:
   enabled: true
 
@@ -39,8 +40,7 @@ homepageDiscovery:
   group: Dashboard
   icon: si-homepage
 
-# Writable /app/config — Homepage copies skeleton YAML on first start; you edit widgets/services there.
-# If you used the old ConfigMap bundle, delete the homepage *-config PVC once so this chart can seed kubernetes.yaml.
+# Writable /app/config — Homepage copies skeleton YAML for any file still missing after init.
 persistence:
   config:
     enabled: true
