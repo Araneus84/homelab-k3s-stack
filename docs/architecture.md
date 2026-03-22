@@ -2,6 +2,8 @@
 
 Detailed technical reference for the homelab k3s cluster.
 
+**Velero (optional):** Helm chart sources live under `infrastructure/velero/` but there is no Argo CD Application for it; enable when you have object storage credentials and an operational backup plan.
+
 ---
 
 ## Network Topology
@@ -43,11 +45,13 @@ Each namespace represents a functional domain. This provides isolation boundarie
 
 | Namespace | Purpose | Contents |
 |-----------|---------|----------|
-| `argocd` | GitOps controller | ArgoCD server, repo-server, application-controller, redis |
+| `argocd` | GitOps controller | Argo CD server, repo-server, application-controller, redis, **Argo CD Image Updater** |
+| `cert-manager` | TLS automation | cert-manager controllers and CRDs |
 | `infrastructure` | Cluster-wide services | Sealed Secrets controller, nginx-ingress controller, NFS provisioner |
-| `monitoring` | Observability stack | Prometheus, Grafana, Alertmanager, node-exporter, kube-state-metrics |
-| `dns` | DNS services | Pi-hole |
-| `media` | Media management | Plex, Sonarr, Radarr, Prowlarr, qBittorrent, Overseerr |
+| `monitoring` | Observability stack | Prometheus, Grafana, Alertmanager, node-exporter, kube-state-metrics, **Loki**, **Promtail** |
+| `dns` | DNS services | Pi-hole, AdGuard Home |
+| `media` | Media management | Plex, Sonarr, Radarr, Prowlarr, qBittorrent, Overseerr, Autobrr, FlareSolverr |
+| `dashboard` | Landing / portal | Homepage |
 | `home-automation` | Smart home | Home Assistant |
 | `security` | Security services | Vaultwarden |
 | `kube-system` | k3s system components | CoreDNS, metrics-server, local-path-provisioner (disabled traefik/servicelb) |
@@ -107,13 +111,17 @@ nginx-ingress runs with `hostNetwork: true` on ports 80 and 443. All `*.home` ho
 | Hostname | Service | Namespace | Backend Port | Notes |
 |----------|---------|-----------|-------------|-------|
 | `argocd.home` | argocd-server | `argocd` | 443 (HTTPS) | SSL passthrough |
-| `grafana.home` | grafana | `monitoring` | 80 | |
+| `grafana.home` | grafana | `monitoring` | 80 | Loki datasource configured in Grafana |
+| `homepage.home` | homepage | `dashboard` | 3000 | Optional cluster ingress discovery (RBAC on pod) |
 | `pihole.home` | pihole-web | `dns` | 80 | App root redirect to `/admin` |
+| `adguard.home` | adguardhome web | `dns` | 80 (→ 3000) | Long-lived connections possible (ingress timeout annotation) |
 | `sonarr.home` | sonarr | `media` | 8989 | |
 | `radarr.home` | radarr | `media` | 7878 | |
 | `prowlarr.home` | prowlarr | `media` | 9696 | |
 | `qbit.home` | qbittorrent-web | `media` | 8080 | |
 | `overseerr.home` | overseerr | `media` | 5055 | |
+| `autobrr.home` | autobrr | `media` | 7474 | |
+| `flaresolverr.home` | flaresolverr | `media` | 8191 | |
 | `ha.home` | homeassistant | `home-automation` | 8123 | |
 | `vaultwarden.home` | vaultwarden | `security` | 8070 | Security headers via annotation |
 
@@ -137,12 +145,14 @@ Vaultwarden adds per-ingress annotations for additional headers (`X-Content-Type
 The app-of-apps pattern uses sync-wave annotations to control deployment order. Lower (more negative) numbers deploy first.
 
 ```
-Wave -4: Sealed Secrets    (must exist before any sealed secret can be decrypted)
-Wave -3: nginx-ingress     (must exist before ingress resources are created)
-Wave -2: NFS Provisioner   (must exist before PVCs can be bound)
-Wave -1: Monitoring        (should be running to observe app deployments)
-Wave  0: All applications  (pihole, plex, sonarr, radarr, etc.)
+Wave -4: Sealed Secrets         (must exist before any sealed secret can be decrypted)
+Wave -3: cert-manager, nginx-ingress  (TLS CRDs/controller; ingress before Ingress resources)
+Wave -2: NFS Provisioner        (must exist before many PVCs can be bound)
+Wave -1: Monitoring (kube-prometheus-stack), Loki (logs; same namespace as Grafana)
+Wave  0: Applications           (dns, media, dashboard, home-automation, security, …)
 ```
+
+Argo CD Image Updater has no sync-wave annotation; it runs in `argocd` and can sync with other `argocd` workloads.
 
 ### Sync Policies
 

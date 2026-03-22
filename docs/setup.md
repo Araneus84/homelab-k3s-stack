@@ -207,7 +207,7 @@ The script performs these steps:
 | Step | Action |
 |------|--------|
 | 1/6 | Verifies `kubectl` can reach the cluster |
-| 2/6 | Creates all namespaces (infrastructure, media, dns, home-automation, security, monitoring, argocd) |
+| 2/6 | Creates all namespaces (infrastructure, media, dns, home-automation, security, monitoring, dashboard, argocd; `cert-manager` is created by Argo CD when that Application syncs) |
 | 3/6 | Installs Sealed Secrets controller via Helm into the `infrastructure` namespace |
 | 4/6 | Installs ArgoCD via Helm into the `argocd` namespace using values from `infrastructure/argocd/values.yaml` |
 | 5/6 | Retrieves and displays the ArgoCD initial admin password |
@@ -297,6 +297,7 @@ kubectl get pods -n argocd
 # Applications
 kubectl get pods -n dns
 kubectl get pods -n media
+kubectl get pods -n dashboard
 kubectl get pods -n home-automation
 kubectl get pods -n security
 
@@ -326,6 +327,8 @@ Once Pi-hole is running, add local DNS records in the Pi-hole admin panel at `ht
    | Domain | IP |
    |--------|----|
    | `pihole.home` | 192.168.50.100 |
+   | `adguard.home` | 192.168.50.100 |
+   | `homepage.home` | 192.168.50.100 |
    | `argocd.home` | 192.168.50.100 |
    | `grafana.home` | 192.168.50.100 |
    | `sonarr.home` | 192.168.50.100 |
@@ -333,6 +336,8 @@ Once Pi-hole is running, add local DNS records in the Pi-hole admin panel at `ht
    | `prowlarr.home` | 192.168.50.100 |
    | `qbit.home` | 192.168.50.100 |
    | `overseerr.home` | 192.168.50.100 |
+   | `autobrr.home` | 192.168.50.100 |
+   | `flaresolverr.home` | 192.168.50.100 |
    | `ha.home` | 192.168.50.100 |
    | `vaultwarden.home` | 192.168.50.100 |
 
@@ -343,7 +348,7 @@ Once Pi-hole is running, add local DNS records in the Pi-hole admin panel at `ht
 If you do not want to use Pi-hole as your network DNS, add entries to `/etc/hosts` on each machine that needs access:
 
 ```
-192.168.50.100  pihole.home argocd.home grafana.home sonarr.home radarr.home prowlarr.home qbit.home overseerr.home ha.home vaultwarden.home
+192.168.50.100  pihole.home adguard.home homepage.home argocd.home grafana.home sonarr.home radarr.home prowlarr.home qbit.home overseerr.home autobrr.home flaresolverr.home ha.home vaultwarden.home
 ```
 
 ### Plex
@@ -450,9 +455,9 @@ This can be scheduled via cron on the control machine:
 
 ### Updating application versions
 
-1. Update the image tag in the app's `values.yaml`
+1. Update the image tag in the app's `values.yaml` (or rely on **Argo CD Image Updater** where annotations are set on the Application, e.g. Homepage and FlareSolverr).
 2. Commit and push to `main`
-3. ArgoCD detects the change and rolls out the new version
+3. Argo CD detects the change and rolls out the new version
 
 ### Backing up sealed secrets keys
 

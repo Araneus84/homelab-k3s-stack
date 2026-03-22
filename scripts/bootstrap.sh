@@ -36,7 +36,7 @@ echo "  Cluster is reachable."
 
 # --- Create namespaces ---
 echo "[2/6] Creating namespaces..."
-for ns in infrastructure media dns home-automation security monitoring argocd; do
+for ns in infrastructure media dns home-automation security monitoring dashboard argocd; do
     kubectl create namespace "$ns" --dry-run=client -o yaml | kubectl apply -f -
 done
 echo "  Namespaces created."
