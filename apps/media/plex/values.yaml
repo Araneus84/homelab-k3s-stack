@@ -25,6 +25,28 @@ service:
   type: ClusterIP
   port: 32400
 
+# Ingress for UI + Homepage discovery (PMS still uses hostNetwork for GDM/DLNA).
+ingress:
+  enabled: true
+  className: nginx
+  host: plex.home
+  annotations: {}
+
+homepageDiscovery:
+  enabled: true
+  name: Plex
+  group: Media
+  icon: si-plex
+
+# Active streams + library counts (not per-title “now playing”; for that use Tautulli later).
+homepageWidget:
+  enabled: true
+  fields:
+    - streams
+    - movies
+    - tv
+    - albums
+
 # Persistent storage for Plex config/metadata
 persistence:
   config:

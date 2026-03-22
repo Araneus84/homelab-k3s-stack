@@ -27,6 +27,12 @@ homepageDiscovery:
   group: Media
   icon: si-qbittorrent
 
+# Homepage service widget (API via in-cluster URL; set HOMEPAGE_VAR_* on the Homepage deployment).
+homepageWidget:
+  enabled: true
+  enableLeechProgress: true
+  enableLeechSize: true
+
 ingress:
   enabled: true
   className: nginx

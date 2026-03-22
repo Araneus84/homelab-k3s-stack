@@ -49,6 +49,9 @@ spec:
               value: {{ .Values.env.PGID | quote }}
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: {{ .Values.allowedHosts | quote }}
+{{- with .Values.extraEnv }}
+{{- toYaml . | nindent 12 }}
+{{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

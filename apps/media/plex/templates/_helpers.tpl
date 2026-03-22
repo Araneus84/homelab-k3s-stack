@@ -38,3 +38,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "plex.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "plex.homepageInternalURL" -}}
+http://{{ include "plex.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+{{- end }}

@@ -23,3 +23,7 @@ app.kubernetes.io/part-of: homelab
 app.kubernetes.io/name: {{ include "qbittorrent.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "qbittorrent.homepageInternalURL" -}}
+http://{{ include "qbittorrent.fullname" . }}-web.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.web.port }}
+{{- end }}

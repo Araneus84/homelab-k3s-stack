@@ -38,3 +38,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "sonarr.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "sonarr.homepageInternalURL" -}}
+http://{{ include "sonarr.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+{{- end }}

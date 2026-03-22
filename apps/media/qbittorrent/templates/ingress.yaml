@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "qbittorrent.labels" . | nindent 4 }}
   {{- $extra := .Values.ingress.annotations | default dict }}
-  {{- if or .Values.homepageDiscovery.enabled $extra }}
+  {{- if or .Values.homepageDiscovery.enabled $extra .Values.homepageWidget.enabled }}
   annotations:
   {{- if .Values.homepageDiscovery.enabled }}
     gethomepage.dev/enabled: "true"
@@ -15,6 +15,18 @@ metadata:
   {{- with .Values.homepageDiscovery.icon }}
     gethomepage.dev/icon: {{ . | quote }}
   {{- end }}
+  {{- end }}
+  {{- if .Values.homepageWidget.enabled }}
+    gethomepage.dev/widget.type: qbittorrent
+    gethomepage.dev/widget.url: {{ include "qbittorrent.homepageInternalURL" . | quote }}
+    gethomepage.dev/widget.username: {{ print "{{HOMEPAGE_VAR_QBIT_USERNAME}}" | quote }}
+    gethomepage.dev/widget.password: {{ print "{{HOMEPAGE_VAR_QBIT_PASSWORD}}" | quote }}
+    {{- if .Values.homepageWidget.enableLeechProgress }}
+    gethomepage.dev/widget.enableLeechProgress: "true"
+    {{- end }}
+    {{- if .Values.homepageWidget.enableLeechSize }}
+    gethomepage.dev/widget.enableLeechSize: "true"
+    {{- end }}
   {{- end }}
   {{- if $extra }}
     {{- toYaml $extra | nindent 4 }}

@@ -22,6 +22,10 @@ homepageDiscovery:
   group: Media
   icon: si-sonarr
 
+# Queue / wanted (uses Sonarr API; set HOMEPAGE_VAR_SONARR_API_KEY on Homepage).
+homepageWidget:
+  enabled: true
+
 ingress:
   enabled: true
   className: nginx

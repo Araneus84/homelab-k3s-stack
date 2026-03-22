@@ -13,6 +13,19 @@ env:
   PUID: "1000"
   PGID: "1000"
 
+# Map API secrets into Homepage (same names as in Ingress annotations).
+# Create a Secret in the Homepage namespace, then reference it here, e.g.:
+# extraEnv:
+#   - name: HOMEPAGE_VAR_PLEX_TOKEN
+#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: plex-token } }
+#   - name: HOMEPAGE_VAR_QBIT_USERNAME
+#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: qbit-user } }
+#   - name: HOMEPAGE_VAR_QBIT_PASSWORD
+#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: qbit-pass } }
+#   - name: HOMEPAGE_VAR_SONARR_API_KEY
+#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: sonarr-apikey } }
+extraEnv: []
+
 # HOMEPAGE_ALLOWED_HOSTS: comma-separated Host headers allowed (v1.0+). Include ingress host;
 # add * so browser requests via LAN IP / alternate names work.
 allowedHosts: "homepage.home,*"
