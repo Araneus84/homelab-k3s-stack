@@ -17,7 +17,7 @@ service:
   port: 8191
 
 ingress:
-  enabled: false
+  enabled: true
   className: nginx
   host: flaresolverr.home
 
