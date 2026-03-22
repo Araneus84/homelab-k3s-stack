@@ -1,5 +1,5 @@
 # Plex Media Server configuration
-replicaCount: 0
+replicaCount: 1
 
 image:
   repository: plexinc/pms-docker
