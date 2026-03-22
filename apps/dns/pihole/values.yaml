@@ -21,7 +21,7 @@ service:
     targetPort: 8081
 
 homepageDiscovery:
-  enabled: true
+  enabled: false
   name: Pi-hole
   group: DNS
   icon: pi-hole

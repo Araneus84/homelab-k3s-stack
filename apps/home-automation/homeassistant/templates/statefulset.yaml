@@ -17,6 +17,40 @@ spec:
     spec:
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: {{ .Values.dnsPolicy }}
+      {{- if and .Values.http .Values.http.ensureTrustedProxyConfig }}
+      initContainers:
+        - name: ensure-http-proxy
+          image: busybox:1.36
+          securityContext:
+            runAsUser: 0
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -e
+              f=/config/configuration.yaml
+              if [ -f "$f" ] && grep -q "use_x_forwarded_for" "$f"; then
+                exit 0
+              fi
+              if [ -f "$f" ] && grep -qE '^http:' "$f"; then
+                echo "ensure-http-proxy: configuration.yaml already has http: — add use_x_forwarded_for and trusted_proxies manually" >&2
+                exit 0
+              fi
+              if [ ! -f "$f" ]; then
+                echo "default_config:" > "$f"
+              fi
+              {
+                echo ""
+                echo "http:"
+                echo "  use_x_forwarded_for: true"
+                echo "  trusted_proxies:"
+          {{- range (.Values.http.trustedProxies | default list) }}
+                echo "    - {{ . }}"
+          {{- end }}
+              } >> "$f"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -37,6 +71,16 @@ spec:
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port: {{ .Values.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
