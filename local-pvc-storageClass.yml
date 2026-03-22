@@ -6,4 +6,4 @@ provisioner: rancher.io/local-path
 reclaimPolicy: Retain
 volumeBindingMode: WaitForFirstConsumer
 parameters:
-  pathPattern: "{{.PVC.namespace}}/{{.PVC.name}}"
+  pathPattern: "{{.PVC.Namespace}}/{{.PVC.Name}}"
