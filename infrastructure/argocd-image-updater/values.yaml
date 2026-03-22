@@ -52,12 +52,14 @@ homelabImageUpdater:
           imageName: lscr.io/linuxserver/qbittorrent:^5.0
           updateStrategy: semver
 
+    # Stay on 1.33.x patch line only — minor bumps (e.g. 1.35) have broken this stack before.
     - namePattern: overseerr
       valuesPath: apps/media/overseerr/values.yaml
       images:
         - alias: overseerr
-          imageName: sctx/overseerr:^1.33
+          imageName: sctx/overseerr:~1.33.2
           updateStrategy: semver
+          allowTags: regexp:^1\.33\.[0-9]+$
 
     - namePattern: plex
       valuesPath: apps/media/plex/values.yaml
