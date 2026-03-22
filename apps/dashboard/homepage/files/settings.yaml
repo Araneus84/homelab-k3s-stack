@@ -1,5 +1,3 @@
-# Templated by Helm
+# Templated by Helm — keep minimal; invalid keys can break the dashboard.
 title: {{ .Values.homepageTitle | default "Homelab" | quote }}
 theme: dark
-color: slate
-headerStyle: boxed

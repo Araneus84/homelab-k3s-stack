@@ -17,8 +17,7 @@ env:
 # add * so browser requests via LAN IP / alternate names work. Tighten to specific IPs if you prefer.
 allowedHosts: "homepage.home,*"
 
-# Git-tracked config (ConfigMap): full stack + Prometheus widget for scrape-target health.
-# Set false to use PVC-only config (legacy / hand-edited files on disk).
+# Git-tracked config (ConfigMap). Set false for PVC-only / hand-edited /app/config.
 bundleConfig: true
 
 homepageTitle: Homelab
@@ -40,11 +39,6 @@ urls:
   vaultwarden: http://vaultwarden.home
   homeassistant: http://ha.home
   plex: https://app.plex.tv
-
-# In-cluster Prometheus API URL (Homepage calls this from the pod; not your browser).
-monitoring:
-  prometheus:
-    url: http://monitoring-kube-prometheus-prometheus.monitoring.svc:9090
 
 service:
   type: ClusterIP

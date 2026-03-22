@@ -1,15 +1,10 @@
-# Templated by Helm — see values.yaml `urls` and `monitoring.prometheus.url`
+# Templated by Helm — see values.yaml `urls`.
+# Prometheus widget/proxy can 500 in some K8s setups; use Grafana for metrics/Prometheus UI.
 - Monitoring:
     - Prometheus:
         icon: si-prometheus
-        description: Scrape targets (cluster + apps)
-        widget:
-          type: prometheus
-          url: {{ .Values.monitoring.prometheus.url }}
-    - Grafana:
-        icon: si-grafana
-        href: {{ .Values.urls.grafana }}
-        description: Dashboards & alerts
+        href: {{ .Values.urls.grafana | quote }}
+        description: Grafana — metrics, Prometheus targets, Loki logs
     - Argo CD:
         icon: si-argocd
         href: {{ .Values.urls.argocd }}
