@@ -16,6 +16,12 @@ spec:
       labels:
         {{- include "flaresolverr.selectorLabels" . | nindent 8 }}
     spec:
+      # securityContext omitted: ghcr.io/flaresolverr/flaresolverr runs a headless Chromium
+      # browser internally. Chrome requires either a specific set of capabilities (SYS_ADMIN for
+      # user namespaces) or --no-sandbox mode, and may need to write to /tmp and /dev/shm.
+      # The official image runs as a dedicated non-root user internally (UID 65534), but restricting
+      # at the pod level (runAsNonRoot, readOnlyRootFilesystem) breaks Chromium sandbox setup.
+      # Leave pod-level securityContext unset and rely on the image's internal user drop.
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

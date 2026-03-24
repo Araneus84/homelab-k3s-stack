@@ -71,3 +71,13 @@ resources:
 
 strategy:
   type: Recreate
+
+# ghcr.io/gethomepage/homepage runs as the 'abc' user (UID 1000) when PUID=1000 is set.
+# The init container (homepage-k8s-config) uses the same image and only writes to /config
+# (the PVC), which is owned by UID 1000 via fsGroup below. runAsNonRoot is safe here.
+# Note: if switching PUID to a different UID, update runAsUser and fsGroup to match.
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  fsGroup: 1000

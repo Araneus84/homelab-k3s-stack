@@ -16,9 +16,11 @@ spec:
       labels:
         {{- include "qbittorrent.selectorLabels" . | nindent 8 }}
     spec:
-      securityContext:
-        runAsUser: {{ .Values.securityContext.runAsUser }}
-        runAsGroup: {{ .Values.securityContext.runAsGroup }}
+      # securityContext omitted at pod level: lscr.io/linuxserver/qbittorrent uses s6-overlay which
+      # requires the process to start as root (UID 0) so that s6 can apply PUID/PGID ownership
+      # fixes before dropping privileges to the `abc` user. Setting runAsUser: 1000 here conflicts
+      # with s6-overlay init and causes the container to crash on startup. UID/GID are controlled
+      # instead via PUID and PGID environment variables, which s6 applies correctly.
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

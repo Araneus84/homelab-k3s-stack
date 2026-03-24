@@ -18,6 +18,12 @@ spec:
     spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+      # securityContext omitted: adguard/adguardhome runs as root internally and requires
+      # hostNetwork: true to bind port 53 (DNS) directly on the node IP. The init container
+      # uses the same image and needs write access to /opt/adguardhome/conf to seed the config
+      # file on first start. NET_BIND_SERVICE capability is implicitly available via hostNetwork.
+      # Setting runAsNonRoot here would break the init container's config copy and AdGuard's
+      # port 53 binding on the host network interface.
       containers:
         - name: adguardhome
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

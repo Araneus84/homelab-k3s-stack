@@ -55,3 +55,9 @@ resources:
 
 nodeSelector: {}
 tolerations: []
+
+# securityContext: intentionally omitted.
+# adguard/adguardhome runs as root to bind port 53 on the host network (hostNetwork: true).
+# The init container uses the same image and must write to a PVC-backed /opt/adguardhome/conf
+# directory on first boot. Restricting to runAsNonRoot breaks port binding and config seeding.
+# securityContext: {}  # uncomment only if using a custom hardened AdGuard build

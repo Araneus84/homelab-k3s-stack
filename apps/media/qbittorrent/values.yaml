@@ -60,9 +60,11 @@ resources:
     cpu: 1000m
     memory: 1Gi
 
-securityContext:
-  runAsUser: 1000
-  runAsGroup: 1000
+# securityContext: pod-level runAsUser/runAsGroup are intentionally omitted.
+# lscr.io/linuxserver/qbittorrent uses s6-overlay, which must start as root to apply
+# PUID/PGID permission fixes before dropping to the unprivileged 'abc' user.
+# Setting runAsUser: 1000 here causes a crash-loop. Use PUID/PGID env vars instead.
+# securityContext: {}  # uncomment only if switching to a non-linuxserver image
 
 strategy:
   type: Recreate

@@ -17,12 +17,20 @@ spec:
     spec:
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: {{ .Values.dnsPolicy }}
+      # securityContext omitted at pod level: Home Assistant requires hostNetwork: true for
+      # mDNS/Zeroconf discovery, Zigbee/Z-Wave USB device access, and local network integrations.
+      # The official homeassistant/home-assistant image runs as root internally. The init
+      # container below also explicitly requires runAsUser: 0 to write configuration.yaml.
+      # Setting runAsNonRoot at the pod level would break both the init container and HA itself.
       {{- if and .Values.http .Values.http.ensureTrustedProxyConfig }}
       initContainers:
         - name: ensure-http-proxy
           image: busybox:1.36
           securityContext:
             runAsUser: 0
+            # runAsUser: 0 required here — this init container writes /config/configuration.yaml
+            # which is owned by root in the HA image's volume. Changing to a non-root user
+            # causes permission denied errors on fresh PVC mounts.
           command: ["sh", "-c"]
           args:
             - |

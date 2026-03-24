@@ -44,3 +44,11 @@ resources:
 
 strategy:
   type: Recreate
+
+# ghcr.io/autobrr/autobrr runs natively as a non-root user (UID 1000) — no root init.
+# These settings are safe and harden the container appropriately.
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  fsGroup: 1000

@@ -51,3 +51,11 @@ autoscaling:
 
 strategy:
   type: Recreate
+
+# sctx/overseerr runs natively as the 'node' user (UID 1000) — no s6-overlay or root init.
+# runAsNonRoot is safe and correct here.
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  fsGroup: 1000

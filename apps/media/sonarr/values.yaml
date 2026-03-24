@@ -68,3 +68,9 @@ autoscaling:
 
 nodeSelector: {}
 tolerations: []
+
+# securityContext: pod-level runAsUser/runAsGroup intentionally omitted.
+# lscr.io/linuxserver/sonarr uses s6-overlay, which must start as root (UID 0) to apply
+# PUID/PGID permission fixes before dropping to the unprivileged 'abc' user.
+# Use PUID and PGID env vars to control the effective runtime UID/GID.
+# securityContext: {}  # uncomment only if switching to a non-linuxserver image

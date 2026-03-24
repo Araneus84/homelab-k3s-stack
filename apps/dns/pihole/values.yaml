@@ -71,6 +71,11 @@ resources:
     cpu: 500m
     memory: 256Mi
 
+# securityContext: capabilities are required and intentional.
+# NET_BIND_SERVICE: allows pihole/FTL to bind port 53 (privileged port <1024) as a non-root process.
+# NET_ADMIN: required by FTL (Pi-hole's DNS engine) for interface management and packet capture.
+# hostNetwork: true is set at the deployment level so the container listens on the node IP directly.
+# Removing these capabilities causes FTL to fail startup with "FAILED to start FTL engine".
 securityContext:
   capabilities:
     add:

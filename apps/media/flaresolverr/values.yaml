@@ -38,3 +38,10 @@ resources:
 
 strategy:
   type: Recreate
+
+# securityContext: intentionally omitted.
+# FlareSolverr runs a headless Chromium browser which requires Linux user-namespace sandbox
+# support (SYS_ADMIN) or --no-sandbox mode. Pod-level restrictions (runAsNonRoot,
+# readOnlyRootFilesystem) break Chrome's sandbox initialization. The official image
+# internally drops to an unprivileged user (UID 65534) after startup.
+# securityContext: {}  # uncomment only if testing a hardened Chromium config

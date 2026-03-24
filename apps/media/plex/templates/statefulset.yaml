@@ -17,6 +17,12 @@ spec:
     spec:
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: ClusterFirstWithHostNet
+      # securityContext omitted: plexinc/pms-docker starts as root to run its start.sh script,
+      # which applies PLEX_UID/PLEX_GID ownership to /config and /transcode before exec'ing
+      # the Plex Media Server process as the configured user. Setting runAsNonRoot or
+      # runAsUser: 1000 at the pod level conflicts with this init sequence and breaks startup.
+      # Additionally, hostNetwork: true is required for GDM (UDP discovery) and DLNA broadcast.
+      # UID/GID are controlled via PLEX_UID and PLEX_GID environment variables.
       containers:
         - name: plex
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

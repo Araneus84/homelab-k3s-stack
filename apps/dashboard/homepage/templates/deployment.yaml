@@ -16,6 +16,10 @@ spec:
       labels:
         {{- include "homepage.selectorLabels" . | nindent 8 }}
     spec:
+{{- if .Values.securityContext }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+{{- end }}
 {{- if .Values.kubernetesDiscovery.enabled }}
       serviceAccountName: {{ include "homepage.fullname" . }}
 {{- end }}

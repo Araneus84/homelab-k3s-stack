@@ -14,6 +14,13 @@ env:
 hostNetwork: true
 dnsPolicy: ClusterFirstWithHostNet
 
+# securityContext: intentionally omitted at pod level.
+# homeassistant/home-assistant runs as root internally for device access (USB, mDNS, Zeroconf).
+# hostNetwork: true is required for local network protocol discovery.
+# The init container (ensure-http-proxy) must also run as UID 0 to write configuration.yaml.
+# runAsNonRoot would break both the init container and the main HA process.
+# securityContext: {}  # uncomment only if using a custom non-root HA image
+
 service:
   type: ClusterIP
   port: 8123

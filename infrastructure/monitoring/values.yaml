@@ -95,6 +95,11 @@ kube-prometheus-stack:
       # Scrape all namespaces
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
+      # Pick up PrometheusRules from all namespaces (not just the monitoring namespace).
+      # The default ruleSelector matches label `release: monitoring` (the Helm release name).
+      # Our homelab-prometheusrule.yaml carries this label, so no custom ruleSelector needed.
+      ruleSelectorNilUsesHelmValues: false
+      ruleNamespaceSelectorNilUsesHelmValues: false
 
   # --- Alertmanager ---
   alertmanager:

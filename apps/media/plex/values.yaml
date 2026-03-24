@@ -81,3 +81,10 @@ autoscaling:
 
 nodeSelector: {}
 tolerations: []
+
+# securityContext: intentionally omitted.
+# plexinc/pms-docker runs start.sh as root on startup to apply PLEX_UID/PLEX_GID ownership
+# to /config and /transcode, then exec's Plex as the configured user. runAsNonRoot conflicts
+# with this init sequence. hostNetwork: true (required for GDM/DLNA) also makes strict
+# pod-level security contexts operationally complex on a single-node cluster.
+# securityContext: {}  # uncomment only if switching to a non-official Plex image
