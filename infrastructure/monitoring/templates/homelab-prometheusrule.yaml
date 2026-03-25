@@ -36,12 +36,12 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash-looping"
+            summary: 'Pod {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}/{{ "{{" }} {{ "$labels.pod" }} {{ "}" }}{{ "}" }} is crash-looping'
             description: >
-              Container {{ $labels.container }} in pod {{ $labels.pod }}
-              (namespace {{ $labels.namespace }}) has restarted more than 3 times
-              in the last 15 minutes. Check logs: kubectl logs -n {{ $labels.namespace }}
-              {{ $labels.pod }} -c {{ $labels.container }} --previous
+              Container {{ "{{" }} {{ "$labels.container" }} {{ "}" }}{{ "}" }} in pod {{ "{{" }} {{ "$labels.pod" }} {{ "}" }}{{ "}" }}
+              (namespace {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}) has restarted more than 3 times
+              in the last 15 minutes. Check logs: kubectl logs -n {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}
+              {{ "{{" }} {{ "$labels.pod" }} {{ "}" }}{{ "}" }} -c {{ "{{" }} {{ "$labels.container" }} {{ "}" }}{{ "}" }} --previous
 
         - alert: PodNotReady
           expr: |
@@ -52,9 +52,9 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is not ready"
+            summary: 'Pod {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}/{{ "{{" }} {{ "$labels.pod" }} {{ "}" }}{{ "}" }} is not ready'
             description: >
-              Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has been
+              Pod {{ "{{" }} {{ "$labels.pod" }} {{ "}" }}{{ "}" }} in namespace {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }} has been
               in a non-Ready state for more than 10 minutes.
 
     # --------------------------------------------------------------------------
@@ -72,10 +72,10 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "Node memory available below 15% on {{ $labels.instance }}"
+            summary: 'Node memory available below 15% on {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }}'
             description: >
-              Node {{ $labels.instance }} has less than 15% memory available
-              (current: {{ $value | humanizePercentage }}). Consider checking for
+              Node {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }} has less than 15% memory available
+              (current: {{ "{{" }} {{ "$value | humanizePercentage" }} {{ "}" }}{{ "}" }}). Consider checking for
               memory-hungry pods or a memory leak.
 
         - alert: NodeMemoryCritical
@@ -88,10 +88,10 @@ spec:
           labels:
             severity: critical
           annotations:
-            summary: "Node memory critically low on {{ $labels.instance }}"
+            summary: 'Node memory critically low on {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }}'
             description: >
-              Node {{ $labels.instance }} has less than 5% memory available
-              (current: {{ $value | humanizePercentage }}). OOM kill risk is high.
+              Node {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }} has less than 5% memory available
+              (current: {{ "{{" }} {{ "$value | humanizePercentage" }} {{ "}" }}{{ "}" }}). OOM kill risk is high.
 
         - alert: NodeCPUSustainedHigh
           expr: |
@@ -104,10 +104,10 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "Node CPU above 90% for 15 minutes on {{ $labels.instance }}"
+            summary: 'Node CPU above 90% for 15 minutes on {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }}'
             description: >
-              Node {{ $labels.instance }} has sustained CPU usage above 90% for
-              the past 15 minutes (current: {{ $value | humanize }}%). Check for
+              Node {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }} has sustained CPU usage above 90% for
+              the past 15 minutes (current: {{ "{{" }} {{ "$value | humanize" }} {{ "}" }}{{ "}" }}%). Check for
               runaway processes or resource-hungry workloads.
 
     # --------------------------------------------------------------------------
@@ -125,11 +125,11 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "Disk space below 20% on {{ $labels.instance }} ({{ $labels.mountpoint }})"
+            summary: 'Disk space below 20% on {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }} ({{ "{{" }} {{ "$labels.mountpoint" }} {{ "}" }}{{ "}" }})'
             description: >
-              Filesystem {{ $labels.mountpoint }} on {{ $labels.instance }} has
+              Filesystem {{ "{{" }} {{ "$labels.mountpoint" }} {{ "}" }}{{ "}" }} on {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }} has
               less than 20% free space remaining
-              (current: {{ $value | humanizePercentage }} free).
+              (current: {{ "{{" }} {{ "$value | humanizePercentage" }} {{ "}" }}{{ "}" }} free).
 
         - alert: NodeDiskSpaceCritical
           expr: |
@@ -141,9 +141,9 @@ spec:
           labels:
             severity: critical
           annotations:
-            summary: "Disk space critically low on {{ $labels.instance }} ({{ $labels.mountpoint }})"
+            summary: 'Disk space critically low on {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }} ({{ "{{" }} {{ "$labels.mountpoint" }} {{ "}" }}{{ "}" }})'
             description: >
-              Filesystem {{ $labels.mountpoint }} on {{ $labels.instance }} has
+              Filesystem {{ "{{" }} {{ "$labels.mountpoint" }} {{ "}" }}{{ "}" }} on {{ "{{" }} {{ "$labels.instance" }} {{ "}" }}{{ "}" }} has
               less than 5% free space remaining. Writes may start failing.
 
         - alert: PVCUsageHigh
@@ -156,10 +156,10 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} above 80%"
+            summary: 'PVC {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}/{{ "{{" }} {{ "$labels.persistentvolumeclaim" }} {{ "}" }}{{ "}" }} above 80%'
             description: >
-              PersistentVolumeClaim {{ $labels.persistentvolumeclaim }} in namespace
-              {{ $labels.namespace }} is {{ $value | humanize }}% full. Consider
+              PersistentVolumeClaim {{ "{{" }} {{ "$labels.persistentvolumeclaim" }} {{ "}" }}{{ "}" }} in namespace
+              {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }} is {{ "{{" }} {{ "$value | humanize" }} {{ "}" }}{{ "}" }}% full. Consider
               expanding the PVC or cleaning up data.
 
         - alert: PVCUsageCritical
@@ -172,10 +172,10 @@ spec:
           labels:
             severity: critical
           annotations:
-            summary: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} above 95%"
+            summary: 'PVC {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}/{{ "{{" }} {{ "$labels.persistentvolumeclaim" }} {{ "}" }}{{ "}" }} above 95%'
             description: >
-              PersistentVolumeClaim {{ $labels.persistentvolumeclaim }} in namespace
-              {{ $labels.namespace }} is {{ $value | humanize }}% full. Risk of write
+              PersistentVolumeClaim {{ "{{" }} {{ "$labels.persistentvolumeclaim" }} {{ "}" }}{{ "}" }} in namespace
+              {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }} is {{ "{{" }} {{ "$value | humanize" }} {{ "}" }}{{ "}" }}% full. Risk of write
               failures and application corruption.
 
     # --------------------------------------------------------------------------
@@ -190,11 +190,11 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "ArgoCD application {{ $labels.name }} is out of sync"
+            summary: 'ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} is out of sync'
             description: >
-              ArgoCD application {{ $labels.name }} (project: {{ $labels.project }})
+              ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} (project: {{ "{{" }} {{ "$labels.project" }} {{ "}" }}{{ "}" }})
               has been out of sync for more than 15 minutes. Check the ArgoCD UI
-              or run: argocd app sync {{ $labels.name }}
+              or run: argocd app sync {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }}
 
         - alert: ArgoCDAppDegraded
           expr: |
@@ -203,9 +203,9 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "ArgoCD application {{ $labels.name }} is degraded"
+            summary: 'ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} is degraded'
             description: >
-              ArgoCD application {{ $labels.name }} (project: {{ $labels.project }})
+              ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} (project: {{ "{{" }} {{ "$labels.project" }} {{ "}" }}{{ "}" }})
               has health status Degraded. One or more managed resources are unhealthy.
 
         - alert: ArgoCDAppSyncUnknown
@@ -215,9 +215,9 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "ArgoCD application {{ $labels.name }} sync status is Unknown"
+            summary: 'ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} sync status is Unknown'
             description: >
-              ArgoCD application {{ $labels.name }} has an Unknown sync status for
+              ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} has an Unknown sync status for
               more than 10 minutes. This may indicate a controller issue or a
               resource that cannot be reconciled.
 
@@ -228,11 +228,11 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "ArgoCD application {{ $labels.name }} sync operation failed"
+            summary: 'ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} sync operation failed'
             description: >
-              ArgoCD application {{ $labels.name }} (project: {{ $labels.project }})
+              ArgoCD application {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} (project: {{ "{{" }} {{ "$labels.project" }} {{ "}" }}{{ "}" }})
               had a sync operation that failed. Check the ArgoCD UI for the error
-              or run: argocd app sync {{ $labels.name }}
+              or run: argocd app sync {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }}
 
     # --------------------------------------------------------------------------
     # cert-manager: certificate expiry warnings
@@ -248,11 +248,11 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in < 14 days"
+            summary: 'Certificate {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}/{{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} expires in < 14 days'
             description: >
-              Certificate {{ $labels.name }} in namespace {{ $labels.namespace }}
+              Certificate {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} in namespace {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}
               expires in less than 14 days
-              (at {{ $value | humanizeDuration }} from now).
+              (at {{ "{{" }} {{ "$value | humanizeDuration" }} {{ "}" }}{{ "}" }} from now).
               Check cert-manager logs: kubectl logs -n cert-manager deploy/cert-manager
 
         - alert: CertificateExpiryCritical
@@ -262,9 +262,9 @@ spec:
           labels:
             severity: critical
           annotations:
-            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in < 3 days"
+            summary: 'Certificate {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}/{{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} expires in < 3 days'
             description: >
-              Certificate {{ $labels.name }} in namespace {{ $labels.namespace }}
+              Certificate {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} in namespace {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}
               expires in less than 3 days. Immediate renewal required.
 
         - alert: CertificateRenewalFailed
@@ -274,8 +274,8 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} is not ready"
+            summary: 'Certificate {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}/{{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} is not ready'
             description: >
-              cert-manager Certificate {{ $labels.name }} in namespace {{ $labels.namespace }}
+              cert-manager Certificate {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }} in namespace {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }}
               has Ready=False for more than 15 minutes. Renewal may have failed.
-              Check: kubectl describe certificate -n {{ $labels.namespace }} {{ $labels.name }}
+              Check: kubectl describe certificate -n {{ "{{" }} {{ "$labels.namespace" }} {{ "}" }}{{ "}" }} {{ "{{" }} {{ "$labels.name" }} {{ "}" }}{{ "}" }}
