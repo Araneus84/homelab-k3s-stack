@@ -15,23 +15,37 @@
 
 ```mermaid
 flowchart LR
-    subgraph cluster["Kubernetes Cluster (k3s)"]
-        subgraph infra["Infrastructure Layer"]
-            certmgr["cert-manager<br/>TLS / ACME"]
-            nginx["nginx-ingress<br/>Ingress controller"]
-            sealed["Sealed Secrets"]
-            nfs["NFS provisioner"]
-            prom["kube-prometheus-stack<br/>Prometheus + Grafana + Alertmanager"]
-            loki["Loki + Promtail<br/>Logs"]
-            imgup["Argo CD Image Updater<br/>Image tag bumps"]
-        end
+    git["Git repo<br/>`main`"] --> argo["Argo CD<br/>App-of-Apps"]
 
+    subgraph k8s["k3s Kubernetes Cluster"]
         subgraph dns["DNS Layer"]
             pihole["Pi-hole"]
             adguard["AdGuard Home"]
         end
 
-        subgraph media["Media Stack"]
+        subgraph security["Security Layer"]
+            certmgr["cert-manager<br/>TLS / ACME"]
+            sealed["Sealed Secrets"]
+            vaultwarden["Vaultwarden"]
+        end
+
+        subgraph edge["Ingress & Networking"]
+            nginx["nginx-ingress<br/>Ingress controller"]
+        end
+
+        subgraph monitoring["Observability"]
+            prom["kube-prometheus-stack<br/>Prometheus + Grafana + Alertmanager"]
+            loki["Loki + Promtail<br/>Logs"]
+        end
+
+        subgraph storage["Storage"]
+            nfs["NFS provisioner"]
+        end
+
+        subgraph media["Apps (Helm charts)"]
+            homepage["Homepage<br/>Dashboard"]
+            homeassistant["Home Assistant"]
+
             overseerr["Overseerr"]
             prowlarr["Prowlarr"]
             radarr["Radarr"]
@@ -41,17 +55,37 @@ flowchart LR
             autobrr["Autobrr"]
             flaresolverr["FlareSolverr"]
         end
-
-        subgraph security["Security Layer"]
-            vaultwarden["Vaultwarden"]
-        end
-
-        subgraph tools["Personal Tools"]
-            homeassistant["Home Assistant"]
-            homepage["Homepage<br/>Dashboard"]
-        end
     end
 
+    %% GitOps wiring
+    argo --> certmgr
+    argo --> sealed
+    argo --> nginx
+    argo --> prom
+    argo --> loki
+    argo --> nfs
+    argo --> pihole
+    argo --> adguard
+    argo --> homepage
+    argo --> homeassistant
+    argo --> overseerr
+    argo --> prowlarr
+    argo --> radarr
+    argo --> sonarr
+    argo --> qbit
+    argo --> plex
+    argo --> autobrr
+    argo --> flaresolverr
+
+    %% TLS + access paths
+    certmgr --> nginx
+    nginx --> homepage
+
+    %% Shared storage consumers
+    nfs --> qbit
+    nfs --> plex
+
+    %% Media automation chain
     overseerr -->|requests| radarr
     overseerr -->|requests| sonarr
     prowlarr -->|indexers| radarr
@@ -60,18 +94,6 @@ flowchart LR
     sonarr -->|downloads| qbit
     radarr -->|library| plex
     sonarr -->|library| plex
-
-    classDef infra fill:#e8f1ff,stroke:#2f6feb,stroke-width:1px,color:#102a43;
-    classDef media fill:#ecfff4,stroke:#1f883d,stroke-width:1px,color:#0f3d2e;
-    classDef security fill:#fff1f1,stroke:#cf222e,stroke-width:1px,color:#5a1b1b;
-    classDef tools fill:#fff8e6,stroke:#9a6700,stroke-width:1px,color:#4d3b00;
-    classDef dns fill:#eef6ff,stroke:#0969da,stroke-width:1px,color:#0f3d2e;
-
-    class certmgr,nginx,sealed,nfs,prom,loki,imgup infra;
-    class overseerr,prowlarr,radarr,sonarr,qbit,plex,autobrr,flaresolverr media;
-    class vaultwarden security;
-    class homeassistant,homepage tools;
-    class pihole,adguard dns;
 ```
 
 ---
