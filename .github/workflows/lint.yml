@@ -30,6 +30,18 @@ jobs:
         with:
           version: v3.11.1
 
+      - name: Add Helm repos (dependencies)
+        run: |
+          set -euo pipefail
+          helm repo add argo-helm https://argoproj.github.io/argo-helm || true
+          helm repo add grafana-helm-charts https://grafana.github.io/helm-charts || true
+          helm repo add vmware-tanzu-helm-charts https://vmware-tanzu.github.io/helm-charts || true
+          helm repo add jetstack https://charts.jetstack.io || true
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true
+          helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner || true
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx || true
+          helm repo update
+
       - name: Lint Helm Charts
         run: |
           # Lint all charts
