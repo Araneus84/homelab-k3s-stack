@@ -73,7 +73,7 @@ homelabImageUpdater:
       valuesPath: apps/media/autobrr/values.yaml
       images:
         - alias: autobrr
-          imageName: ghcr.io/autobrr/autobrr:^1.64
+          imageName: ghcr.io/autobrr/autobrr:^1.75
           updateStrategy: semver
           allowTags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+
 
