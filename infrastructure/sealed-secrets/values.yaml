@@ -1,15 +1,13 @@
-sealed-secrets:
-  # Resource limits
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 200m
-      memory: 128Mi
+# Values for sealed-secrets Helm chart (bitnami-labs/sealed-secrets).
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
 
-  # Metrics for Prometheus
-  metrics:
-    serviceMonitor:
-      enabled: true
-      namespace: monitoring
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
