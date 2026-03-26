@@ -36,13 +36,13 @@ jobs:
           for chart in $(find apps -name Chart.yaml -print); do
             chart_dir=$(dirname "$chart")
             echo "=== Helm lint $chart_dir ==="
-            helm dependency update "$chart_dir"
+            helm dependency build "$chart_dir"
             helm lint $chart_dir
           done
 
           for chart in $(find infrastructure -name Chart.yaml -print); do
             chart_dir=$(dirname "$chart")
             echo "=== Helm lint $chart_dir ==="
-            helm dependency update "$chart_dir"
+            helm dependency build "$chart_dir"
             helm lint $chart_dir
           done

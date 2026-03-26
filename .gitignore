@@ -9,9 +9,7 @@
 ansible/inventory/hosts.yml    # Contains real IPs -- use hosts.yml.example
 *.retry
 
-# Helm build artifacts
-**/charts/*.tgz
-**/Chart.lock
+# Helm: Chart.lock + charts/*.tgz are committed so Argo CD can `helm template` without `helm dependency build`.
 
 # Kubeconfig
 kubeconfig
