@@ -56,13 +56,40 @@ kube-prometheus-stack:
       dashboards:
         enabled: true
         searchNamespace: ALL
+      datasources:
+        # Prometheus + Alertmanager are listed explicitly in additionalDataSources below
+        # so every datasource lives in Git (chart defaults are off).
+        defaultDatasourceEnabled: false
 
+    # Grafana datasource provisioning (no secrets — in-cluster HTTP, Grafana-side proxy).
+    # URLs use Helm tpl against the kube-prometheus-stack release name/namespace.
     additionalDataSources:
+      - name: Prometheus
+        type: prometheus
+        uid: prometheus
+        access: proxy
+        url: http://{{ template "kube-prometheus-stack.fullname" . }}-prometheus.{{ template "kube-prometheus-stack.namespace" . }}:{{ .Values.prometheus.service.port }}/{{ trimPrefix "/" .Values.prometheus.prometheusSpec.routePrefix }}
+        isDefault: true
+        editable: false
+        jsonData:
+          httpMethod: POST
+          timeInterval: 30s
+      - name: Alertmanager
+        type: alertmanager
+        uid: alertmanager
+        access: proxy
+        url: http://{{ template "kube-prometheus-stack.fullname" . }}-alertmanager.{{ template "kube-prometheus-stack.namespace" . }}:{{ .Values.alertmanager.service.port }}/{{ trimPrefix "/" .Values.alertmanager.alertmanagerSpec.routePrefix }}
+        editable: false
+        jsonData:
+          handleGrafanaManagedAlerts: false
+          implementation: prometheus
       - name: Loki
         type: loki
+        uid: loki
         access: proxy
         url: http://loki.monitoring.svc.cluster.local:3100
         isDefault: false
+        editable: false
         jsonData:
           maxLines: 1000
 

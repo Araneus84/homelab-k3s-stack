@@ -111,7 +111,7 @@ nginx-ingress runs with `hostNetwork: true` on ports 80 and 443. All `*.home` ho
 | Hostname | Service | Namespace | Backend Port | Notes |
 |----------|---------|-----------|-------------|-------|
 | `argocd.home` | argocd-server | `argocd` | 443 (HTTPS) | SSL passthrough |
-| `grafana.home` | grafana | `monitoring` | 80 | Loki datasource configured in Grafana |
+| `grafana.home` | grafana | `monitoring` | 80 | Datasources: Prometheus, Alertmanager, Loki — see `infrastructure/monitoring/values.yaml` and `infrastructure/monitoring/config/grafana-datasources.yaml` (reference) |
 | `homepage.home` | homepage | `dashboard` | 3000 | Optional cluster ingress discovery (RBAC on pod) |
 | `pihole.home` | pihole-web | `dns` | 80 | App root redirect to `/admin` |
 | `adguard.home` | adguardhome web | `dns` | 80 (→ 3000) | Long-lived connections possible (ingress timeout annotation) |
