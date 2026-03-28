@@ -13,18 +13,35 @@ env:
   PUID: "1000"
   PGID: "1000"
 
-# Map API secrets into Homepage (same names as in Ingress annotations).
-# Create a Secret in the Homepage namespace, then reference it here, e.g.:
-# extraEnv:
-#   - name: HOMEPAGE_VAR_PLEX_TOKEN
-#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: plex-token } }
-#   - name: HOMEPAGE_VAR_QBIT_USERNAME
-#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: qbit-user } }
-#   - name: HOMEPAGE_VAR_QBIT_PASSWORD
-#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: qbit-pass } }
-#   - name: HOMEPAGE_VAR_SONARR_API_KEY
-#     valueFrom: { secretKeyRef: { name: homepage-widgets, key: sonarr-apikey } }
-extraEnv: []
+# Widget auth: Secret `homepage-widgets` in the Homepage namespace (`dashboard`).
+# Keys must match ingress templates on Plex / qBittorrent / Sonarr charts.
+# See secrets/SEALING.txt for kubectl / kubeseal steps.
+# optional: true keeps the pod running if the Secret is missing (widgets stay empty until you create it).
+extraEnv:
+  - name: HOMEPAGE_VAR_QBIT_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: homepage-widgets
+        key: qbit-user
+        optional: true
+  - name: HOMEPAGE_VAR_QBIT_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: homepage-widgets
+        key: qbit-pass
+        optional: true
+  - name: HOMEPAGE_VAR_SONARR_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: homepage-widgets
+        key: sonarr-apikey
+        optional: true
+  - name: HOMEPAGE_VAR_RADARR_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: homepage-widgets
+        key: radarr-apikey
+        optional: true
 
 # HOMEPAGE_ALLOWED_HOSTS: comma-separated Host headers allowed (v1.0+). Include ingress host;
 # add * so browser requests via LAN IP / alternate names work.

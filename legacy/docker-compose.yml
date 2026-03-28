@@ -1,3 +1,5 @@
+# Historical reference only: Docker Compose stack before migration to k3s/Helm/Argo CD.
+# Not maintained. Do not use WEBPASSWORD or other placeholders as-is.
 version: "3.8"
 
 services:

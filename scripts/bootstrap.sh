@@ -44,6 +44,7 @@ echo "  Namespaces created."
 # --- Install Sealed Secrets ---
 echo "[3/6] Installing Sealed Secrets controller..."
 helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 helm upgrade --install sealed-secrets sealed-secrets/sealed-secrets \
     --namespace "$SEALED_SECRETS_NAMESPACE" \
@@ -54,8 +55,6 @@ echo "  Sealed Secrets installed."
 
 # --- Install ArgoCD ---
 echo "[4/6] Installing ArgoCD..."
-helm repo add argo https://argoproj.github.io/argo-helm
-helm repo update
 helm upgrade --install argocd argo/argo-cd \
     --namespace "$ARGOCD_NAMESPACE" \
     --create-namespace \

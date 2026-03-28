@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "prowlarr.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   strategy:
     type: Recreate
   selector:
@@ -18,10 +16,7 @@ spec:
       labels:
         {{- include "prowlarr.selectorLabels" . | nindent 8 }}
     spec:
-      # securityContext omitted: lscr.io/linuxserver/prowlarr uses s6-overlay which requires
-      # the process to start as root so s6 can apply PUID/PGID ownership before dropping
-      # privileges to the 'abc' user. runAsNonRoot or runAsUser: 1000 conflicts with s6-overlay
-      # init and causes crash-loops. UID/GID are controlled via PUID and PGID env vars.
+      # No pod securityContext: linuxserver s6 init needs root briefly; use PUID/PGID env.
       containers:
         - name: prowlarr
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

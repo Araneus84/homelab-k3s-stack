@@ -1,24 +1,12 @@
 ---
-# PrometheusRule: Homelab Alerting Rules
-#
-# Deployed as part of the monitoring Helm chart (infrastructure/monitoring) so it lands
-# in the `monitoring` namespace alongside kube-prometheus-stack.
-#
-# Label requirements: kube-prometheus-stack's default ruleSelector matches PrometheusRules
-# that carry the label `release: <helm-release-name>`. When ArgoCD deploys this chart with
-# application name "monitoring", the Helm release name is "monitoring", so the label below
-# is `release: monitoring`. If your release name differs, update this label to match.
-#
-# To verify what your Prometheus instance is selecting, run:
-#   kubectl get prometheus -n monitoring -o jsonpath='{.items[0].spec.ruleSelector}'
+# Homelab PrometheusRule (monitoring chart). Label `release` must match kube-prometheus-stack's
+# Helm release name (here: Argo CD app name `monitoring`).
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: homelab-alerts
   namespace: monitoring
   labels:
-    # Must match the Prometheus operator's ruleSelector — defaults to release label of the
-    # kube-prometheus-stack Helm release. ArgoCD uses the Application name as release name.
     release: monitoring
     app.kubernetes.io/part-of: kube-prometheus-stack
 spec:

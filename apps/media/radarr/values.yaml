@@ -55,18 +55,5 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: 80
-
 nodeSelector: {}
 tolerations: []
-
-# securityContext: pod-level runAsUser/runAsGroup intentionally omitted.
-# lscr.io/linuxserver/radarr uses s6-overlay, which must start as root (UID 0) to apply
-# PUID/PGID permission fixes before dropping to the unprivileged 'abc' user.
-# Use PUID and PGID env vars to control the effective runtime UID/GID.
-# securityContext: {}  # uncomment only if switching to a non-linuxserver image

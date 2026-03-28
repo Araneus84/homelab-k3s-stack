@@ -1,6 +1,6 @@
 # Architecture
 
-Detailed technical reference for the homelab k3s cluster.
+Cluster reference. Repo layout and quick stack summary: [README.md](../README.md).
 
 **Velero (optional):** Helm chart sources live under `infrastructure/velero/` but there is no Argo CD Application for it; enable when you have object storage credentials and an operational backup plan.
 
@@ -8,11 +8,11 @@ Detailed technical reference for the homelab k3s cluster.
 
 ## Network Topology
 
-The cluster runs as a single-node k3s deployment on a local network (192.168.1.0/24). All services are accessed via `*.home` DNS entries pointing to the node IP.
+The cluster runs as a single-node k3s deployment on a local network (example: `192.168.1.0/24`). All services are accessed via `*.home` DNS entries pointing to the node IP.
 
 ### Host Network Services
 
-Two services use `hostNetwork: true`:
+These workloads use `hostNetwork: true`:
 
 | Service | Reason |
 |---------|--------|
@@ -125,7 +125,7 @@ nginx-ingress runs with `hostNetwork: true` on ports 80 and 443. All `*.home` ho
 | `ha.home` | homeassistant | `home-automation` | 8123 | |
 | `vaultwarden.home` | vaultwarden | `security` | 8070 | Security headers via annotation |
 
-Plex is accessed directly at `http://<node-ip>:32400/web` because it runs on hostNetwork and does not use ingress.
+Plex is accessed directly at `http://<node-ip>:32400/web` (e.g. `http://192.168.1.10:32400/web` if the node is `192.168.1.10`) because it runs on hostNetwork and does not use ingress.
 
 ### Ingress Security Headers
 
@@ -251,7 +251,7 @@ Installed and configured via Ansible with a custom jail template. Protects SSH a
 
 ### Container Security
 
-- Non-root execution: workloads run as UID/GID 1000 where possible
+- Non-root execution: workloads run as UID/GID 1000 where possible (linuxserver.io *arr images use s6-overlay and start as root briefly for PUID/PGID; see those charts’ values)
 - `readOnlyRootFilesystem: true` applied to Vaultwarden
 - Explicit capabilities: only Pi-hole receives `NET_ADMIN` and `NET_BIND_SERVICE`
 - No `privileged: true` on any container

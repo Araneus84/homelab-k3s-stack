@@ -1,24 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
-# ==============================================================================
-# Sealed Secret Helper
-# ==============================================================================
-# Creates a sealed secret from a key-value pair.
-#
-# Usage:
-#   ./seal-secret.sh <secret-name> <namespace> <key> <value>
-#
-# Examples:
-#   ./seal-secret.sh pihole-admin dns password 'my-pihole-password'
-#   ./seal-secret.sh grafana-admin-credentials monitoring admin-password 'my-grafana-pass'
-#   ./seal-secret.sh vaultwarden-admin security admin-token 'my-admin-token'
-#
-# Prerequisites:
-#   - kubeseal CLI installed
-#   - Sealed Secrets controller running in cluster
-#   - kubectl configured
-# ==============================================================================
+# seal-secret.sh <secret-name> <namespace> <key> <value>
+# Needs: kubectl, kubeseal, Sealed Secrets controller in cluster (see docs/setup.md).
+KUBESEAL_VERSION="${KUBESEAL_VERSION:-0.27.3}"
 
 SECRET_NAME="${1:?Usage: seal-secret.sh <secret-name> <namespace> <key> <value>}"
 NAMESPACE="${2:?Usage: seal-secret.sh <secret-name> <namespace> <key> <value>}"
@@ -27,13 +11,10 @@ VALUE="${4:?Usage: seal-secret.sh <secret-name> <namespace> <key> <value>}"
 
 # Check for kubeseal
 if ! command -v kubeseal &>/dev/null; then
-    echo "ERROR: kubeseal is not installed."
-    echo ""
-    echo "Install it with:"
-    echo "  # Linux amd64"
-    echo "  wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.27.3/kubeseal-0.27.3-linux-amd64.tar.gz"
-    echo "  tar -xvzf kubeseal-0.27.3-linux-amd64.tar.gz"
-    echo "  sudo install -m 755 kubeseal /usr/local/bin/kubeseal"
+    echo "ERROR: kubeseal is not installed. Install instructions: docs/setup.md (Install kubeseal)."
+    echo "Example (Linux amd64, version ${KUBESEAL_VERSION}):"
+    echo "  wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz"
+    echo "  tar -xvzf kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz && sudo install -m 755 kubeseal /usr/local/bin/kubeseal"
     exit 1
 fi
 
@@ -59,4 +40,4 @@ echo ""
 echo "Apply it with:"
 echo "  kubectl apply -f ${SECRET_NAME}.sealed.yaml"
 echo ""
-echo "Or commit the .sealed.yaml file to git (it's safe -- encrypted with the cluster's key)."
+echo "Or add the .sealed.yaml file to git when you commit (encrypted for this cluster only)."

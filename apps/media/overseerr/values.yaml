@@ -42,18 +42,9 @@ resources:
     cpu: 500m
     memory: 256Mi
 
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: 80
-
 strategy:
   type: Recreate
 
-# sctx/overseerr runs natively as the 'node' user (UID 1000) — no s6-overlay or root init.
-# runAsNonRoot is safe and correct here.
 securityContext:
   runAsUser: 1000
   runAsGroup: 1000

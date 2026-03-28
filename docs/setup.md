@@ -1,6 +1,8 @@
 # Setup Guide
 
-Step-by-step instructions for provisioning the homelab from scratch.
+Step-by-step provisioning from scratch. **Example IPs** in this doc use `192.168.1.0/24` (e.g. node `192.168.1.10`, NAS `192.168.1.11`); substitute your LAN.
+
+See [README.md](../README.md) for repo layout and [architecture.md](architecture.md) for cluster detail.
 
 ---
 
@@ -8,7 +10,7 @@ Step-by-step instructions for provisioning the homelab from scratch.
 
 ### Hardware / Infrastructure
 
-- **Server**: Ubuntu 22.04+ (physical machine or VM). Minimum 4 CPU cores, 8 GB RAM, 50 GB disk. The server should have a static IP on your local network (e.g., 192.168.50.100).
+- **Server**: Ubuntu 22.04+ (physical machine or VM). Minimum 4 CPU cores, 8 GB RAM, 50 GB disk. The server should have a static IP on your local network (e.g., 192.168.1.10).
 - **NAS**: Any NAS appliance (Synology, TrueNAS, QNAP, etc.) with NFS exports enabled. Required exports:
   - A general-purpose export for Kubernetes PVCs (e.g., `/volume1/k8s-data`)
   - Media exports for Plex/Sonarr/Radarr (e.g., `/volume1/data/Movies`, `/volume1/data/Tv`, `/volume1/data/Downloads`)
@@ -36,13 +38,13 @@ ssh-keygen -t ed25519 -C "homelab" -f ~/.ssh/homelab_key
 Copy the public key to the server:
 
 ```bash
-ssh-copy-id -i ~/.ssh/homelab_key.pub your-user@192.168.50.100
+ssh-copy-id -i ~/.ssh/homelab_key.pub your-user@192.168.1.10
 ```
 
 Verify passwordless login works:
 
 ```bash
-ssh -i ~/.ssh/homelab_key your-user@192.168.50.100
+ssh -i ~/.ssh/homelab_key your-user@192.168.1.10
 ```
 
 ---
@@ -80,8 +82,8 @@ Edit `inventory/hosts.yml`:
 all:
   hosts:
     homelab:
-      ansible_host: "192.168.50.100"              # Your server IP
-      ansible_user: "alex"                        # Your SSH username
+      ansible_host: "192.168.1.10"              # Your server IP
+      ansible_user: "user"                        # Your SSH username
       ansible_ssh_private_key_file: "~/.ssh/homelab_key"
       ansible_python_interpreter: /usr/bin/python3
   children:
@@ -98,7 +100,7 @@ nfs_server: "nas.home"
 nfs_base_export: /volume1/data
 
 # Your SSH user
-primary_user: alex
+primary_user: user
 
 # Your timezone
 timezone: America/New_York
@@ -158,13 +160,13 @@ ansible-playbook playbooks/site.yml --tags k3s
 After Ansible completes, copy the kubeconfig to your control machine:
 
 ```bash
-scp your-user@192.168.50.100:/etc/rancher/k3s/k3s.yaml ~/.kube/config
+scp your-user@192.168.1.10:/etc/rancher/k3s/k3s.yaml ~/.kube/config
 ```
 
 Update the server address from `127.0.0.1` to your actual server IP:
 
 ```bash
-sed -i 's/127.0.0.1/192.168.50.100/g' ~/.kube/config
+sed -i 's/127.0.0.1/192.168.1.10/g' ~/.kube/config
 ```
 
 On macOS, use `sed -i ''` instead of `sed -i`.
@@ -326,29 +328,29 @@ Once Pi-hole is running, add local DNS records in the Pi-hole admin panel at `ht
 
    | Domain | IP |
    |--------|----|
-   | `pihole.home` | 192.168.50.100 |
-   | `adguard.home` | 192.168.50.100 |
-   | `homepage.home` | 192.168.50.100 |
-   | `argocd.home` | 192.168.50.100 |
-   | `grafana.home` | 192.168.50.100 |
-   | `sonarr.home` | 192.168.50.100 |
-   | `radarr.home` | 192.168.50.100 |
-   | `prowlarr.home` | 192.168.50.100 |
-   | `qbit.home` | 192.168.50.100 |
-   | `overseerr.home` | 192.168.50.100 |
-   | `autobrr.home` | 192.168.50.100 |
-   | `flaresolverr.home` | 192.168.50.100 |
-   | `ha.home` | 192.168.50.100 |
-   | `vaultwarden.home` | 192.168.50.100 |
+   | `pihole.home` | 192.168.1.10 |
+   | `adguard.home` | 192.168.1.10 |
+   | `homepage.home` | 192.168.1.10 |
+   | `argocd.home` | 192.168.1.10 |
+   | `grafana.home` | 192.168.1.10 |
+   | `sonarr.home` | 192.168.1.10 |
+   | `radarr.home` | 192.168.1.10 |
+   | `prowlarr.home` | 192.168.1.10 |
+   | `qbit.home` | 192.168.1.10 |
+   | `overseerr.home` | 192.168.1.10 |
+   | `autobrr.home` | 192.168.1.10 |
+   | `flaresolverr.home` | 192.168.1.10 |
+   | `ha.home` | 192.168.1.10 |
+   | `vaultwarden.home` | 192.168.1.10 |
 
-3. Set your router's DHCP DNS server to the Pi-hole IP (192.168.50.100) so all devices on the network use it.
+3. Set your router's DHCP DNS server to the Pi-hole IP (192.168.1.10) so all devices on the network use it.
 
 ### Option B: /etc/hosts (per-machine)
 
 If you do not want to use Pi-hole as your network DNS, add entries to `/etc/hosts` on each machine that needs access:
 
 ```
-192.168.50.100  pihole.home adguard.home homepage.home argocd.home grafana.home sonarr.home radarr.home prowlarr.home qbit.home overseerr.home autobrr.home flaresolverr.home ha.home vaultwarden.home
+192.168.1.10  pihole.home adguard.home homepage.home argocd.home grafana.home sonarr.home radarr.home prowlarr.home qbit.home overseerr.home autobrr.home flaresolverr.home ha.home vaultwarden.home
 ```
 
 ### Plex
@@ -356,7 +358,7 @@ If you do not want to use Pi-hole as your network DNS, add entries to `/etc/host
 Plex does not use ingress -- it runs on hostNetwork and is accessed directly at:
 
 ```
-http://192.168.50.100:32400/web
+http://192.168.1.10:32400/web
 ```
 
 No DNS entry is needed for Plex.
@@ -372,9 +374,9 @@ fatal: [homelab]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh
 ```
 
 - Verify the IP in `hosts.yml` is correct
-- Verify SSH key path: `ssh -i ~/.ssh/homelab_key your-user@192.168.50.100`
-- Ensure the SSH key was copied: `ssh-copy-id -i ~/.ssh/homelab_key.pub your-user@192.168.50.100`
-- Check that the server is reachable: `ping 192.168.50.100`
+- Verify SSH key path: `ssh -i ~/.ssh/homelab_key your-user@192.168.1.10`
+- Ensure the SSH key was copied: `ssh-copy-id -i ~/.ssh/homelab_key.pub your-user@192.168.1.10`
+- Check that the server is reachable: `ping 192.168.1.10`
 
 ### k3s fails to install
 
@@ -412,7 +414,7 @@ my-pod       Pending   0          5m
 - Verify Pi-hole pod is running: `kubectl get pods -n dns`
 - Check that the LoadBalancer service has an external IP: `kubectl get svc -n dns`
 - On bare-metal k3s, Pi-hole's DNS service uses a LoadBalancer type. If k3s's built-in klipper-lb is disabled, you may need to set `loadBalancerIP` to your node IP in the Pi-hole values.
-- Test DNS directly: `dig @192.168.50.100 google.com`
+- Test DNS directly: `dig @192.168.1.10 google.com`
 
 ### nginx-ingress not reachable on ports 80/443
 
