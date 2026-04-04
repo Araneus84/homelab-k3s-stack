@@ -54,12 +54,12 @@ existingSecret: pihole-admin
 persistence:
   config:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 2Gi
     accessMode: ReadWriteOnce
   dnsmasq:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 500Mi
     accessMode: ReadWriteOnce
 

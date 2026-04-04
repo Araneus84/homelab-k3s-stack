@@ -36,12 +36,12 @@ env:
 persistence:
   conf:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 1Gi
     accessMode: ReadWriteOnce
   work:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 1Gi
     accessMode: ReadWriteOnce
 

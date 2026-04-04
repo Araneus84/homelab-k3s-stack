@@ -36,7 +36,7 @@ ingress:
 persistence:
   config:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 5Gi
     accessMode: ReadWriteOnce
 
@@ -44,12 +44,8 @@ persistence:
 nfsMedia:
   enabled: true
   server: "192.168.50.110"
-  downloads:
-    path: /mnt/HD/HD_a2/NAS
-    mountPath: /mnt/nas
-  media:
-    path: /mnt/HD/HD_a2/NAS
-    mountPath: /mnt/nas
+  path: /mnt/HD/HD_a2/NAS
+  mountPath: /mnt/nas
 
 resources:
   requests:

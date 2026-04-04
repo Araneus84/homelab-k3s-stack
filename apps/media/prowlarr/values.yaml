@@ -32,13 +32,9 @@ ingress:
 persistence:
   config:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 2Gi
     accessMode: ReadWriteOnce
-
-# NFS volumes (Prowlarr only needs config, no media volumes)
-nfsMedia:
-  enabled: false
 
 resources:
   requests:

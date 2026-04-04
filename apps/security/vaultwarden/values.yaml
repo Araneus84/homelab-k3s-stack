@@ -39,7 +39,7 @@ ingress:
 persistence:
   data:
     enabled: true
-    storageClass: nfs-client
+    storageClass: local-path-homelab
     size: 5Gi
     accessMode: ReadWriteOnce
     mountPath: /data
