@@ -36,6 +36,14 @@ persistence:
     size: 2Gi
     accessMode: ReadWriteOnce
 
+# NFS volumes for media from NAS (optional)
+nfsMedia:
+  enabled: true
+  server: "192.168.50.110"
+  downloads:
+    path: /mnt/HD/HD_a2/NAS
+    mountPath: /mnt/nas
+
 resources:
   requests:
     cpu: 100m
