@@ -1,5 +1,5 @@
 # Sonarr TV series management configuration
-replicaCount: 0
+replicaCount: 1
 
 image:
   repository: lscr.io/linuxserver/sonarr
