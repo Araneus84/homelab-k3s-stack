@@ -34,8 +34,8 @@ spec:
             - name: config
               mountPath: /config
             {{- if .Values.nfsMedia.enabled }}
-            - name: downloads
-              mountPath: {{ .Values.nfsMedia.downloads.mountPath }}
+            - name: nas
+              mountPath: {{ .Values.nfsMedia.mountPath }}
             {{- end }}
           livenessProbe:
             httpGet:
@@ -60,10 +60,10 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "prowlarr.fullname" . }}-config
         {{- if .Values.nfsMedia.enabled }}
-        - name: downloads
+        - name: nas
           nfs:
             server: {{ .Values.nfsMedia.server }}
-            path: {{ .Values.nfsMedia.downloads.path }}
+            path: {{ .Values.nfsMedia.path }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

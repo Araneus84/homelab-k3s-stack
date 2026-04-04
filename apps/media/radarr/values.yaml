@@ -36,7 +36,7 @@ persistence:
     size: 5Gi
     accessMode: ReadWriteOnce
 
-# NFS volumes for media from NAS
+# NFS: NAS export path (server filesystem) vs mountPath (inside container; match qBittorrent)
 nfsMedia:
   enabled: true
   server: "192.168.50.110"

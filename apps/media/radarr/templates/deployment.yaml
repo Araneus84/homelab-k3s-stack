@@ -34,10 +34,8 @@ spec:
             - name: config
               mountPath: /config
             {{- if .Values.nfsMedia.enabled }}
-            - name: downloads
-              mountPath: {{ .Values.nfsMedia.downloads.mountPath }}
-            - name: media
-              mountPath: {{ .Values.nfsMedia.media.mountPath }}
+            - name: nas
+              mountPath: {{ .Values.nfsMedia.mountPath }}
             {{- end }}
           livenessProbe:
             httpGet:
@@ -62,14 +60,10 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "radarr.fullname" . }}-config
         {{- if .Values.nfsMedia.enabled }}
-        - name: downloads
+        - name: nas
           nfs:
             server: {{ .Values.nfsMedia.server }}
-            path: {{ .Values.nfsMedia.downloads.path }}
-        - name: media
-          nfs:
-            server: {{ .Values.nfsMedia.server }}
-            path: {{ .Values.nfsMedia.media.path }}
+            path: {{ .Values.nfsMedia.path }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
