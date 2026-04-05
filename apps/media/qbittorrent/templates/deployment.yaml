@@ -49,6 +49,10 @@ spec:
               mountPath: /config
             - name: downloads
               mountPath: {{ .Values.nfs.downloads.mountPath }}
+            {{- if .Values.nfs.downloads.aliasMountPath }}
+            - name: downloads
+              mountPath: {{ .Values.nfs.downloads.aliasMountPath }}
+            {{- end }}
       volumes:
         - name: config
           persistentVolumeClaim:

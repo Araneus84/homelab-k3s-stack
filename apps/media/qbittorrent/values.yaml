@@ -51,6 +51,8 @@ nfs:
     server: 192.168.50.110
     path: /mnt/HD/HD_a2/NAS
     mountPath: /mnt/nas
+    # Same NFS export at /downloads so linuxserver default save path matches Sonarr/Radarr.
+    aliasMountPath: /downloads
 
 resources:
   requests:

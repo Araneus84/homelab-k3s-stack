@@ -46,6 +46,8 @@ nfsMedia:
   server: "192.168.50.110"
   path: /mnt/HD/HD_a2/NAS
   mountPath: /mnt/nas
+  # Same export at /downloads so qBittorrent’s default path exists here (remote path mapping not required).
+  downloadsAliasPath: /downloads
 
 resources:
   requests:
