@@ -10,6 +10,7 @@
 #   2. security - SSH hardening, firewall, fail2ban
 #   3. nfs      - NFS client mounts from NAS
 #   4. k3s      - k3s installation and verification
+#   5. k3s_dr_backup - daily NAS mirror of k3s DB + local-path PVCs (crash plan)
 #
 # After this completes, run ../scripts/bootstrap.sh to install ArgoCD
 # which will then deploy all applications from git.
@@ -44,6 +45,8 @@
       tags: [nfs, setup]
     - role: k3s
       tags: [k3s]
+    - role: k3s_dr_backup
+      tags: [k3s, k3s_dr_backup, dr]
 
   post_tasks:
     - name: Display completion message
@@ -61,4 +64,7 @@
                cd ../scripts && ./bootstrap.sh
 
             3. ArgoCD will sync all applications from git.
+
+            4. DR: NAS folder {{ nfs_mount_point }}/homelab-k3s-dr-backup/ (timer k3s-dr-backup.timer)
+               Full restore: docs/disaster-recovery.md
           ============================================

@@ -1,0 +1,12 @@
+---
+# Install/update k3s DR backup timer (NFS must be mounted). See docs/disaster-recovery.md
+#   ansible-playbook playbooks/k3s-dr-backup.yml
+
+- name: Configure k3s DR backup to NAS
+  hosts: k3s_servers
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: k3s_dr_backup
+      tags: [k3s_dr_backup, dr]

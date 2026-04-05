@@ -2,6 +2,10 @@
 
 Cluster reference. Repo layout and quick stack summary: [README.md](../README.md).
 
+**Crash-plan backup (node → NAS):** Ansible role `k3s_dr_backup` installs `k3s-dr-backup.timer`, which **rsyncs** `/var/lib/rancher/k3s/server/db/` (full cluster state), `/var/lib/rancher/k3s/storage/` (**local-path** PVC data: app DBs/configs), and `/etc/rancher/k3s/` into **`$nfs_mount_point/homelab-k3s-dr-backup/`** on the NAS. **Restore:** [disaster-recovery.md](disaster-recovery.md).
+
+**Cluster backup (supplemental):** `infrastructure/cluster-backup/` — CronJob exports read-only YAML (Argo CD apps, cert-manager, SealedSecrets CRs, ingress, selected namespaces except `media`) to an **`nfs-client` PVC**. No raw `Secret` objects; **not** a substitute for the node DR mirror above.
+
 **Velero (optional):** Helm chart sources live under `infrastructure/velero/` but there is no Argo CD Application for it; enable when you have object storage credentials and an operational backup plan.
 
 ---
