@@ -9,7 +9,7 @@
 #   0 3 * * 0 cd /path/to/homelab/ansible && ansible-playbook playbooks/maintenance.yml
 #
 # Each k3s node also gets systemd timer k3s-image-prune.timer (weekly crictl rmi --prune)
-# unless k3s_image_prune_timer_enabled is false in group_vars.
+# unless maintenance_image_prune_timer_enabled is false in group_vars.
 # ==============================================================================
 
 - name: Perform system maintenance

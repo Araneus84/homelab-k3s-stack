@@ -3,7 +3,7 @@
 Description=Weekly prune of unused container images for k3s
 
 [Timer]
-OnCalendar={{ k3s_image_prune_on_calendar }}
+OnCalendar={{ maintenance_image_prune_on_calendar }}
 Persistent=true
 
 [Install]
