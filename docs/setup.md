@@ -459,7 +459,7 @@ The maintenance role also installs **`k3s-image-prune.timer`** on each k3s node:
 
 ### Disaster recovery (crash plan)
 
-Replacing the node and restoring **cluster state, databases, and local-path configs** is documented in **[disaster-recovery.md](disaster-recovery.md)**. That flow uses **`k3s-dr-backup.timer`** (installed by `site.yml` or `playbooks/k3s-dr-backup.yml`) to mirror k3s data to **`$nfs_mount_point/homelab-k3s-dr-backup/`**. The in-cluster **cluster-backup** CronJob is only a supplemental YAML export.
+Replacing the node and restoring **cluster state, databases, and local-path configs** is documented in **[disaster-recovery.md](disaster-recovery.md)**. Run Ansible **from your laptop** (`playbooks/site.yml` or `k3s-dr-backup.yml`) to install **`k3s-dr-backup.timer`** on the **homelab host**; the timer then runs **on the server** and mirrors k3s data to **`$nfs_mount_point/homelab-k3s-dr-backup/`**. The in-cluster **cluster-backup** CronJob is only a supplemental YAML export.
 
 ### Updating application versions
 

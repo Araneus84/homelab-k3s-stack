@@ -1,12 +1,21 @@
 # Disaster recovery (crash plan)
 
-Goal: replace the **node** (e.g. laptop) and bring the cluster back so **workloads, databases, and configs** match the last good backup — **without** re-seeding every app by hand.
+Goal: replace the **k3s node** (the homelab machine) and bring the cluster back so **workloads, databases, and configs** match the last good backup — **without** re-seeding every app by hand.
+
+## Where each piece runs
+
+| Piece | Runs on | Role |
+|--------|---------|------|
+| **Ansible** (`ansible-playbook …`) | Your **laptop / workstation** (control node) | SSH into the homelab host and install or update files, systemd units, packages |
+| **`k3s-dr-backup.timer`** + script | The **k3s server** (homelab node) | Fires on a schedule **on that machine** and rsyncs k3s data to the NAS mount (`nfs_mount_point` on the node) |
+
+There is no mismatch: you **push** the timer definition from the laptop once (or whenever you change the role); after that, backups run **autonomously on the node** without your laptop being on.
 
 This stack uses **two** backup layers:
 
 | Layer | What it is | What it gives you |
 |--------|------------|-------------------|
-| **Node DR backup** (Ansible + systemd) | `k3s-dr-backup.timer` copies k3s state to **NAS** | **Full API state** (all Secrets, PVC bindings) + **local-path PVC files** (Sonarr/Radarr DBs, Pi-hole, Vaultwarden, Home Assistant, Loki, etc.) + k3s config |
+| **Node DR backup** (Ansible deploys; systemd runs on node) | `k3s-dr-backup.timer` on the **homelab host** copies k3s state to **NAS** | **Full API state** (all Secrets, PVC bindings) + **local-path PVC files** (Sonarr/Radarr DBs, Pi-hole, Vaultwarden, Home Assistant, Loki, etc.) + k3s config |
 | **cluster-backup** (CronJob in cluster) | YAML dumps to an **nfs-client PVC** | Human-readable exports of many CRs; **no** raw `Secret` objects; **no** replacement for node DR |
 
 **Media libraries** on the NAS are already on the NAS; you are not duplicating them in these jobs.
@@ -29,7 +38,7 @@ homelab-k3s-dr-backup/
 Install path on the node: `/usr/local/sbin/k3s-dr-backup.sh`  
 Timer: `k3s-dr-backup.timer` (default **02:15** daily; change via Ansible `k3s_dr_backup_on_calendar`).
 
-Manual run:
+Manual run **on the homelab node** (SSH in, or a one-off Ansible ad-hoc):
 
 ```bash
 sudo /usr/local/sbin/k3s-dr-backup.sh
@@ -88,13 +97,17 @@ Typical pattern: stop k3s, run `k3s server --cluster-reset --cluster-reset-resto
 
 ---
 
-## Ansible
+## Ansible (on your laptop)
 
-- DR timer is applied with **`site.yml`** (after `k3s`) or only this role:
-  ```bash
-  cd ansible && ansible-playbook playbooks/k3s-dr-backup.yml
-  ```
-- Variables: `roles/k3s_dr_backup/defaults/main.yml` (`k3s_dr_backup_dest_dir`, schedule, retention).
+From your **workstation** (repo clone + inventory pointing at the homelab host):
+
+```bash
+cd homelab/ansible && ansible-playbook playbooks/k3s-dr-backup.yml
+```
+
+Or full **`site.yml`** (after `k3s`) to install the timer the first time. That only **configures** the node; it does not need to run daily.
+
+Variables: `roles/k3s_dr_backup/defaults/main.yml` (`k3s_dr_backup_dest_dir`, schedule, retention).
 
 ---
 

@@ -2,8 +2,9 @@
 # ==============================================================================
 # Master Playbook - Full homelab provisioning from bare metal to k3s
 # ==============================================================================
-# Usage:
+# Usage (from your laptop / Ansible control machine):
 #   ansible-playbook playbooks/site.yml
+# Tasks run over SSH on hosts: k3s_servers (the homelab node), not on the laptop.
 #
 # This playbook runs all roles in order:
 #   1. common   - Base OS configuration

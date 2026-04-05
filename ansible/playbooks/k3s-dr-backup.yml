@@ -1,5 +1,6 @@
 ---
-# Install/update k3s DR backup timer (NFS must be mounted). See docs/disaster-recovery.md
+# Install/update k3s DR backup timer on the homelab host (run from your laptop).
+# NFS must be mounted on that host. See docs/disaster-recovery.md
 #   ansible-playbook playbooks/k3s-dr-backup.yml
 
 - name: Configure k3s DR backup to NAS
