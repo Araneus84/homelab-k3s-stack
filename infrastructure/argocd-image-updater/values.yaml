@@ -24,7 +24,7 @@ homelabImageUpdater:
           updateStrategy: semver
           allowTags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+
 
-    # *arr: track linuxserver :latest; digest strategy follows digest when the tag moves (see adguardhome).
+    # *arr + qBittorrent (linuxserver): :latest + digest when the tag moves (see adguardhome).
     - namePattern: sonarr
       valuesPath: apps/media/sonarr/values.yaml
       images:
@@ -50,8 +50,8 @@ homelabImageUpdater:
       valuesPath: apps/media/qbittorrent/values.yaml
       images:
         - alias: qbittorrent
-          imageName: "lscr.io/linuxserver/qbittorrent:>=5.0.0"
-          updateStrategy: semver
+          imageName: lscr.io/linuxserver/qbittorrent:latest
+          updateStrategy: digest
 
     # Stay on 1.33.x patch line only — minor bumps (e.g. 1.35) have broken this stack before.
     - namePattern: overseerr

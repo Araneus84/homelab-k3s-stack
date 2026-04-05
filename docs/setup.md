@@ -455,6 +455,8 @@ This can be scheduled via cron on the control machine:
 0 3 * * 0 cd /path/to/homelab/ansible && ansible-playbook playbooks/maintenance.yml
 ```
 
+The maintenance role also installs **`k3s-image-prune.timer`** on each k3s node: weekly `k3s crictl rmi --prune` removes **unused** images from containerd (safe for running pods). Override schedule with `k3s_image_prune_on_calendar` or set `k3s_image_prune_timer_enabled: false` in Ansible vars to turn it off. Check status with `systemctl list-timers k3s-image-prune.timer`.
+
 ### Updating application versions
 
 1. Update the image tag in the app's `values.yaml` (or rely on **Argo CD Image Updater** where annotations are set on the Application, e.g. Homepage and FlareSolverr).

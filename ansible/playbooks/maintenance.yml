@@ -7,6 +7,9 @@
 #
 # Can be scheduled via cron on the control machine:
 #   0 3 * * 0 cd /path/to/homelab/ansible && ansible-playbook playbooks/maintenance.yml
+#
+# Each k3s node also gets systemd timer k3s-image-prune.timer (weekly crictl rmi --prune)
+# unless k3s_image_prune_timer_enabled is false in group_vars.
 # ==============================================================================
 
 - name: Perform system maintenance
@@ -28,3 +31,4 @@
           - Disk space checked
           - NFS mounts verified
           - k3s service verified
+          - Unused container images pruned (playbook + weekly systemd timer when enabled)

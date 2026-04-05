@@ -92,5 +92,40 @@
 # --- Clean up old container images ---
 - name: Prune unused container images (k3s crictl)
   ansible.builtin.command: k3s crictl rmi --prune
-  changed_when: true
+  register: k3s_crictl_prune
+  changed_when: ( (k3s_crictl_prune.stdout | default('')) ~ (k3s_crictl_prune.stderr | default('')) ) is search('(?i)delete|remove|pruned')
+  failed_when: false
+
+- name: Install systemd units for scheduled image prune
+  when: k3s_image_prune_timer_enabled | bool
+  block:
+    - name: Deploy k3s-image-prune.service
+      ansible.builtin.template:
+        src: k3s-image-prune.service.j2
+        dest: /etc/systemd/system/k3s-image-prune.service
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Deploy k3s-image-prune.timer
+      ansible.builtin.template:
+        src: k3s-image-prune.timer.j2
+        dest: /etc/systemd/system/k3s-image-prune.timer
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Enable and start k3s image prune timer
+      ansible.builtin.systemd:
+        name: k3s-image-prune.timer
+        enabled: true
+        state: started
+        daemon_reload: true
+
+- name: Disable k3s image prune timer (when not wanted)
+  when: not (k3s_image_prune_timer_enabled | bool)
+  ansible.builtin.systemd:
+    name: k3s-image-prune.timer
+    enabled: false
+    state: stopped
   failed_when: false
