@@ -3,8 +3,8 @@ replicaCount: 1
 
 image:
   repository: lscr.io/linuxserver/radarr
-  tag: "5.16.3"
-  pullPolicy: IfNotPresent
+  tag: latest
+  pullPolicy: Always
 
 # Environment
 env:

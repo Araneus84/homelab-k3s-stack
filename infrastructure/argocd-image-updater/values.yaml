@@ -24,27 +24,27 @@ homelabImageUpdater:
           updateStrategy: semver
           allowTags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+
 
-    # >=x.y.z (not ^x.y) so majors can advance; ^ caps at next major (e.g. ^4.0 excludes 5.x).
+    # *arr: track linuxserver :latest; digest strategy follows digest when the tag moves (see adguardhome).
     - namePattern: sonarr
       valuesPath: apps/media/sonarr/values.yaml
       images:
         - alias: sonarr
-          imageName: "lscr.io/linuxserver/sonarr:>=4.0"
-          updateStrategy: semver
+          imageName: lscr.io/linuxserver/sonarr:latest
+          updateStrategy: digest
 
     - namePattern: radarr
       valuesPath: apps/media/radarr/values.yaml
       images:
         - alias: radarr
-          imageName: "lscr.io/linuxserver/radarr:>=5.16.0"
-          updateStrategy: semver
+          imageName: lscr.io/linuxserver/radarr:latest
+          updateStrategy: digest
 
     - namePattern: prowlarr
       valuesPath: apps/media/prowlarr/values.yaml
       images:
         - alias: prowlarr
-          imageName: "lscr.io/linuxserver/prowlarr:>=1.28.0"
-          updateStrategy: semver
+          imageName: lscr.io/linuxserver/prowlarr:latest
+          updateStrategy: digest
 
     - namePattern: qbittorrent
       valuesPath: apps/media/qbittorrent/values.yaml
