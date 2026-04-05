@@ -24,32 +24,33 @@ homelabImageUpdater:
           updateStrategy: semver
           allowTags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+
 
+    # >=x.y.z (not ^x.y) so majors can advance; ^ caps at next major (e.g. ^4.0 excludes 5.x).
     - namePattern: sonarr
       valuesPath: apps/media/sonarr/values.yaml
       images:
         - alias: sonarr
-          imageName: lscr.io/linuxserver/sonarr:^4.0
+          imageName: lscr.io/linuxserver/sonarr:>=4.0.0
           updateStrategy: semver
 
     - namePattern: radarr
       valuesPath: apps/media/radarr/values.yaml
       images:
         - alias: radarr
-          imageName: lscr.io/linuxserver/radarr:^5.16
+          imageName: lscr.io/linuxserver/radarr:>=5.16.0
           updateStrategy: semver
 
     - namePattern: prowlarr
       valuesPath: apps/media/prowlarr/values.yaml
       images:
         - alias: prowlarr
-          imageName: lscr.io/linuxserver/prowlarr:^1.28
+          imageName: lscr.io/linuxserver/prowlarr:>=1.28.0
           updateStrategy: semver
 
     - namePattern: qbittorrent
       valuesPath: apps/media/qbittorrent/values.yaml
       images:
         - alias: qbittorrent
-          imageName: lscr.io/linuxserver/qbittorrent:^5.0
+          imageName: lscr.io/linuxserver/qbittorrent:>=5.0.0
           updateStrategy: semver
 
     # Stay on 1.33.x patch line only — minor bumps (e.g. 1.35) have broken this stack before.
