@@ -1,9 +1,9 @@
 kube-prometheus-stack:
-  # Longer TTL so Argo can observe admission hook Jobs before Kubernetes GC.
   prometheusOperator:
+    # Admission webhook + certgen Job is a frequent source of Argo CD "stuck sync" pain
+    # (Helm hooks + SSA). For a homelab, disabling this is usually fine.
     admissionWebhooks:
-      patch:
-        ttlSecondsAfterFinished: 300
+      enabled: false
 
   # --- Grafana ---
   grafana:

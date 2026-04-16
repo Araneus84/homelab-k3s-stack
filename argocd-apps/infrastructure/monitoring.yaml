@@ -23,6 +23,12 @@ spec:
       namespace: monitoring
       jsonPointers:
         - /data
+    - group: monitoring.coreos.com
+      kind: PrometheusRule
+      name: homelab-alerts
+      namespace: monitoring
+      jqPathExpressions:
+        - .metadata.annotations."prometheus-operator-validated"
   syncPolicy:
     automated:
       prune: true
