@@ -31,3 +31,4 @@ spec:
       - CreateNamespace=true
       # SSA + kube-prometheus-stack Helm hooks → stuck on admission-create Job (Argo CD).
       - SkipHooks=true
+      - ServerSideApply=true
