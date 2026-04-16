@@ -100,6 +100,16 @@ kube-prometheus-stack:
       retention: 15d
       retentionSize: 10GB
 
+      # kube-prometheus-stack defaults these via the operator; if we omit them, the live
+      # Prometheus CR gets defaulted fields that Argo CD then reports as OutOfSync.
+      scrapeInterval: 30s
+      evaluationInterval: 30s
+
+      # Explicitly match the operator's default selector so Git matches cluster state.
+      ruleSelector:
+        matchLabels:
+          release: monitoring
+
       # Storage
       storageSpec:
         volumeClaimTemplate:
@@ -123,8 +133,8 @@ kube-prometheus-stack:
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
       # Pick up PrometheusRules from all namespaces (not just the monitoring namespace).
-      # The default ruleSelector matches label `release: monitoring` (the Helm release name).
-      # Our homelab-prometheusrule.yaml carries this label, so no custom ruleSelector needed.
+      # `ruleSelector` above matches the kube-prometheus-stack default so Argo CD doesn't fight
+      # operator defaults on the live Prometheus CR.
       ruleSelectorNilUsesHelmValues: false
       ruleNamespaceSelectorNilUsesHelmValues: false
 
