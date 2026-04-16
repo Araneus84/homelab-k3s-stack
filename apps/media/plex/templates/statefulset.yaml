@@ -78,6 +78,7 @@ spec:
             initialDelaySeconds: 120
             periodSeconds: 30
             timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /web/index.html
@@ -85,6 +86,16 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /web/index.html
+              port: plex
+            # Plex can take several minutes to come up after upgrades/DB checks.
+            # startupProbe gates liveness so we avoid restart loops during boot.
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 60
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
