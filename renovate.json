@@ -23,7 +23,9 @@
       "matchDatasources": ["docker"],
       "matchDepNames": ["plexinc/pms-docker"],
       "automerge": false,
-      "labels": ["plex", "docker"]
+      "labels": ["plex", "docker"],
+      "allowedVersions": "/^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+-[0-9a-f]+(-amd64)?$/i",
+      "description": "Never propose floating tags like latest; only Plex release-style tags."
     }
   ]
 }

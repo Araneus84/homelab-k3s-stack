@@ -1,10 +1,11 @@
 # Plex Media Server configuration
 replicaCount: 1
 
+# Stability: always pin an explicit plexinc/pms-docker tag (never "latest").
+# Floating tags + DB downgrades caused corruption and broken libraries; updates via Renovate PRs only.
 image:
   repository: plexinc/pms-docker
   tag: "1.43.1.10611-1e34174b1-amd64"
-  # tag: "latest"
   pullPolicy: IfNotPresent
   pullSecrets: []
   # Example:
@@ -60,12 +61,14 @@ persistence:
     size: 20Gi
     accessMode: ReadWriteOnce
 
-# Single read-only NFS mount for media (one mountPath; do not duplicate mounts to the same path)
+# NFS media: primary mount stays at mountPath. Optional legacyMirrorPath mounts the SAME export
+# again (read-only) so older Plex library roots like /media/... keep working alongside /mnt/nas/...
 nfsMedia:
   enabled: true
   server: "192.168.50.110"
   path: /mnt/HD/HD_a2/NAS
   mountPath: /mnt/nas
+  legacyMirrorPath: "/media"
 
 # Plex is single-replica in this setup, so use vertical scaling.
 # requests = minimum guaranteed resources

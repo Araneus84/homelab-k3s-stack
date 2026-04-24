@@ -74,6 +74,11 @@ spec:
             - name: media
               mountPath: {{ .Values.nfsMedia.mountPath }}
               readOnly: true
+            {{- if .Values.nfsMedia.legacyMirrorPath }}
+            - name: media-legacy
+              mountPath: {{ .Values.nfsMedia.legacyMirrorPath }}
+              readOnly: true
+            {{- end }}
             {{- end }}
             - name: transcode
               mountPath: /transcode
@@ -101,7 +106,7 @@ spec:
             # startupProbe gates liveness so we avoid restart loops during boot.
             periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 60
+            failureThreshold: 90
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -114,6 +119,13 @@ spec:
             server: {{ .Values.nfsMedia.server }}
             path: {{ .Values.nfsMedia.path }}
             readOnly: true
+        {{- if .Values.nfsMedia.legacyMirrorPath }}
+        - name: media-legacy
+          nfs:
+            server: {{ .Values.nfsMedia.server }}
+            path: {{ .Values.nfsMedia.path }}
+            readOnly: true
+        {{- end }}
         {{- end }}
         - name: transcode
           emptyDir:
