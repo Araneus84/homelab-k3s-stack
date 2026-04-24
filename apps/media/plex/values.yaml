@@ -3,7 +3,7 @@ replicaCount: 1
 
 image:
   repository: plexinc/pms-docker
-  tag: "1.41.3.9314-a0bfb8370"
+  tag: "1.43.1.10611-1e34174b1-amd64"
   pullPolicy: IfNotPresent
 
 # Plex requires hostNetwork for GDM (discovery) and DLNA

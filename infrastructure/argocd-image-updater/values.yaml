@@ -53,6 +53,16 @@ homelabImageUpdater:
           imageName: lscr.io/linuxserver/qbittorrent:latest
           updateStrategy: digest
 
+    # Plex: stateful app best-practice = auto-update patch releases only on one minor line.
+    # This keeps upgrades predictable and avoids risky schema jumps.
+    - namePattern: plex
+      valuesPath: apps/media/plex/values.yaml
+      images:
+        - alias: plex
+          imageName: plexinc/pms-docker:~1.43.1
+          updateStrategy: semver
+          allowTags: regexp:^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-[a-f0-9]+(-amd64)?$
+
     # Stay on 1.33.x patch line only — minor bumps (e.g. 1.35) have broken this stack before.
     - namePattern: overseerr
       valuesPath: apps/media/overseerr/values.yaml
@@ -61,14 +71,6 @@ homelabImageUpdater:
           imageName: sctx/overseerr:~1.33.2
           updateStrategy: semver
           allowTags: regexp:^1\.33\.[0-9]+$
-
-    - namePattern: plex
-      valuesPath: apps/media/plex/values.yaml
-      images:
-        - alias: plex
-          imageName: plexinc/pms-docker:1.41.3.9314-a0bfb8370
-          updateStrategy: newest-build
-          allowTags: regexp:^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-[a-f0-9]+
 
     - namePattern: autobrr
       valuesPath: apps/media/autobrr/values.yaml
