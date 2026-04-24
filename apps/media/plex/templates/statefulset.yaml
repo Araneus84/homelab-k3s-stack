@@ -17,6 +17,12 @@ spec:
     spec:
       hostNetwork: {{ .Values.hostNetwork }}
       dnsPolicy: ClusterFirstWithHostNet
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range . }}
+        - name: {{ . | quote }}
+        {{- end }}
+      {{- end }}
       # securityContext omitted: plexinc/pms-docker starts as root to run its start.sh script,
       # which applies PLEX_UID/PLEX_GID ownership to /config and /transcode before exec'ing
       # the Plex Media Server process as the configured user. Setting runAsNonRoot or

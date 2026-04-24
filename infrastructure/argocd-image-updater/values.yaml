@@ -53,15 +53,7 @@ homelabImageUpdater:
           imageName: lscr.io/linuxserver/qbittorrent:latest
           updateStrategy: digest
 
-    # Plex: stateful app best-practice = auto-update patch releases only on one minor line.
-    # This keeps upgrades predictable and avoids risky schema jumps.
-    - namePattern: plex
-      valuesPath: apps/media/plex/values.yaml
-      images:
-        - alias: plex
-          imageName: plexinc/pms-docker:~1.43.1
-          updateStrategy: semver
-          allowTags: regexp:^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-[a-f0-9]+(-amd64)?$
+    # Plex: version bumps via Renovate PRs to apps/media/plex/values.yaml (no in-cluster image overrides).
 
     # Stay on 1.33.x patch line only — minor bumps (e.g. 1.35) have broken this stack before.
     - namePattern: overseerr
@@ -129,7 +121,7 @@ argocd-image-updater:
 
   extraArgs:
     - --interval
-    - 15m
+    - 24h
 
   config:
     argocd.namespace: argocd
