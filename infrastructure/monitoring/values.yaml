@@ -110,11 +110,13 @@ kube-prometheus-stack:
         matchLabels:
           release: monitoring
 
-      # Storage
+      # Storage: Prometheus TSDB requires reliable POSIX file locks — NFS often breaks with
+      # "lock DB directory: resource temporarily unavailable" and Grafana then has no metrics.
+      # Use local-path (node disk); keep Grafana/Loki on NFS if you prefer.
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: nfs-client
+            storageClassName: local-path-homelab
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
