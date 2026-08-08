@@ -1,8 +1,8 @@
 replicaCount: 1
 
-# Use Kubernetes networking rather than binding the container directly to the
-# node interface. The fixed NodePort below is the LAN endpoint for clients.
-hostNetwork: false
+# Stremio derives its advertised base URL from its network interface. Bind it to
+# the node network so desktop clients receive the LAN address, not a pod CIDR IP.
+hostNetwork: true
 
 # Pin an explicit upstream release; update through Renovate/a deliberate Git change.
 image:
@@ -15,12 +15,12 @@ image:
 env:
   NO_CORS: "1"
 
-# The server is exposed through K3s at a fixed NodePort. Clients use
-# http://192.168.50.100:31470.
+# The server binds port 11470 directly on the single-node LAN address.
+# Clients use http://192.168.50.100:11470.
+# No ServiceLB port reservation is needed.
 service:
-  type: NodePort
+  type: ClusterIP
   port: 11470
-  nodePort: 31470
 
 # The upstream image declares /root/.stremio-server as its persistent application
 # directory. Persisting it preserves server settings and its disposable stream cache.
