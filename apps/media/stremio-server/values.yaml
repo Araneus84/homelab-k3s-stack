@@ -1,0 +1,39 @@
+replicaCount: 1
+
+# Pin an explicit upstream release; update through Renovate/a deliberate Git change.
+image:
+  repository: stremio/server
+  tag: "v4.21.0"
+  pullPolicy: IfNotPresent
+
+# K3s ServiceLB publishes this port directly on the node LAN address.
+# On this single-node homelab, clients use http://192.168.50.100:11470.
+service:
+  type: LoadBalancer
+  port: 11470
+
+# The upstream image declares /root/.stremio-server as its persistent application
+# directory. Persisting it preserves server settings and its disposable stream cache.
+persistence:
+  enabled: true
+  storageClass: local-path-homelab
+  size: 100Gi
+  accessMode: ReadWriteOnce
+  mountPath: /root/.stremio-server
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+strategy:
+  type: Recreate
+
+# Leave empty for the current single-node K3s cluster (192.168.50.100).
+# If nodes are added, set a stable node label here to keep the local PVC and
+# K3s LoadBalancer endpoint on the intended homelab node.
+nodeSelector: {}
+tolerations: []
