@@ -17,9 +17,6 @@ spec:
         {{- include "stremio-server.selectorLabels" . | nindent 8 }}
     spec:
       hostNetwork: {{ .Values.hostNetwork }}
-      {{- if .Values.hostNetwork }}
-      dnsPolicy: ClusterFirstWithHostNet
-      {{- end }}
       containers:
         - name: stremio-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
