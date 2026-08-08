@@ -1,5 +1,9 @@
 replicaCount: 1
 
+# The server derives its advertised base URL from its network interface. Use the
+# node network so LAN clients receive 192.168.50.100, not the pod-only 10.42.x.x address.
+hostNetwork: true
+
 # Pin an explicit upstream release; update through Renovate/a deliberate Git change.
 image:
   repository: stremio/server
