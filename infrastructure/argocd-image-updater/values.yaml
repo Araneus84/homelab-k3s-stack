@@ -86,7 +86,7 @@ homelabImageUpdater:
         - alias: pihole
           imageName: pihole/pihole:2024.07.0
           updateStrategy: newest-build
-          allowTags: regexp:^20[0-9]{2}\.[0-9]{2}\.[0-9]+
+          allowTags: regexp:^20[0-9]{2}\.[0-9]{2}\.[0-9]+$
 
     - namePattern: adguardhome
       valuesPath: apps/dns/adguardhome/values.yaml
@@ -108,7 +108,7 @@ homelabImageUpdater:
         - alias: homeassistant
           imageName: homeassistant/home-assistant:2024.12.5
           updateStrategy: newest-build
-          allowTags: regexp:^20[0-9]{2}\.[0-9]+\.[0-9]+
+          allowTags: regexp:^20[0-9]{2}\.[0-9]+\.[0-9]+$
 
 argocd-image-updater:
   replicaCount: 1
