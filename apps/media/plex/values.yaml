@@ -1,5 +1,5 @@
 # Plex Media Server configuration
-replicaCount: 1
+replicaCount: 0  # DISABLED 2026-10-20: container compromised via WAN-exposed Plex (see incident); rebuild before re-enabling
 
 # Stability: always pin an explicit plexinc/pms-docker tag (never "latest").
 # Floating tags + DB downgrades caused corruption and broken libraries; updates via Renovate PRs only.
