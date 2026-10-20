@@ -34,7 +34,7 @@ resources:
     memory: 256Mi
   limits:
     cpu: 1000m
-    memory: 1Gi
+    memory: 2Gi
 
 strategy:
   type: Recreate
