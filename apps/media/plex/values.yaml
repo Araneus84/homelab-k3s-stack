@@ -1,5 +1,5 @@
 # Plex Media Server configuration
-replicaCount: 0  # DISABLED 2026-10-20: container compromised via WAN-exposed Plex (see incident); rebuild before re-enabling
+replicaCount: 1  # Plex is LAN-only: remote access disabled in Preferences, UFW 32400 limited to LAN+tailscale, no router forward. Never expose to WAN (compromised 2026-10-18)
 
 # Stability: always pin an explicit plexinc/pms-docker tag (never "latest").
 # Floating tags + DB downgrades caused corruption and broken libraries; updates via Renovate PRs only.
