@@ -14,21 +14,32 @@ fi
 
 mkdir -p "${DEST}/history/${TS}" "${DEST}/current"
 
+# The NAS export squashes root, so archive-mode rsync failed on chown (exit 23) and, with set -e, aborted
+# the run before the local-path mirror. Copy without owner/group/perms; ownership is recorded separately.
+RSYNC_NFS="-rltD --no-owner --no-group --no-perms"
+
+# Small, high-value data first so a later failure cannot skip it: Vaultwarden etc. (security namespace).
+# tar stores uid/gid/mode inside the archive, which the NFS export cannot hold.
+log "secrets-critical: local-path/security -> current/security-storage-${TS}.tar.gz"
+tar -C /var/lib/rancher/k3s/storage -czf "${DEST}/current/security-storage-${TS}.tar.gz" security
+find "${DEST}/current" -maxdepth 1 -name 'security-storage-*.tar.gz' -mtime "+30" -print -delete
+
 # Optional: refreshes snapshots inside server/db when using embedded etcd.
 log "etcd-snapshot (ignored if SQLite / non-etcd backend)"
 k3s etcd-snapshot save --name "dr-${TS}" 2>/dev/null || log "snapshot save skipped (normal on some k3s builds)"
 
 log "history copy: server/db -> history/${TS}/server-db"
-rsync -a /var/lib/rancher/k3s/server/db/ "${DEST}/history/${TS}/server-db/"
+rsync ${RSYNC_NFS} /var/lib/rancher/k3s/server/db/ "${DEST}/history/${TS}/server-db/"
 
 log "mirror: server/db -> current/server-db"
-rsync -a --delete /var/lib/rancher/k3s/server/db/ "${DEST}/current/server-db/"
+rsync ${RSYNC_NFS} --delete /var/lib/rancher/k3s/server/db/ "${DEST}/current/server-db/"
 
 log "mirror: local-path PVC data -> current/storage"
-rsync -a --delete /var/lib/rancher/k3s/storage/ "${DEST}/current/storage/"
+rsync ${RSYNC_NFS} --delete /var/lib/rancher/k3s/storage/ "${DEST}/current/storage/"
+find /var/lib/rancher/k3s/storage -printf '%U:%G %m %p\n' > "${DEST}/current/storage-ownership.txt"
 
 log "copy: /etc/rancher/k3s -> current/etc-rancher-k3s"
-rsync -a /etc/rancher/k3s/ "${DEST}/current/etc-rancher-k3s/"
+rsync ${RSYNC_NFS} /etc/rancher/k3s/ "${DEST}/current/etc-rancher-k3s/"
 
 if [[ "${HIST_DAYS}" =~ ^[0-9]+$ ]] && [[ "${HIST_DAYS}" -gt 0 ]]; then
   find "${DEST}/history" -mindepth 1 -maxdepth 1 -type d -mtime "+${HIST_DAYS}" -print | while read -r d; do
