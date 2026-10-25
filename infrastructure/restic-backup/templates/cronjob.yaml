@@ -40,11 +40,11 @@ spec:
                 - -c
                 - |
                   set -eu
-                  cp /usr/bin/restic /opt/restic
-                  chmod 0555 /opt/restic
+                  cp /usr/bin/restic /restic-bin/restic
+                  chmod 0555 /restic-bin/restic
               volumeMounts:
                 - name: restic-bin
-                  mountPath: /opt
+                  mountPath: /restic-bin
           containers:
             - name: backup
               image: "{{ .Values.images.kubectl.repository }}:{{ .Values.images.kubectl.tag }}"
@@ -60,7 +60,7 @@ spec:
                     name: {{ .Values.restic.passwordSecretName }}
               volumeMounts:
                 - name: restic-bin
-                  mountPath: /opt
+                  mountPath: /restic-bin
                   readOnly: true
                 - name: plex-data
                   mountPath: {{ .Values.backup.sourceMountPath }}

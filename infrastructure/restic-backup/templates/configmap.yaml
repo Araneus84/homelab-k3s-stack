@@ -9,8 +9,8 @@ data:
   backup.sh: |
     #!/bin/bash
     set -euo pipefail
-    export PATH="/opt:/usr/local/bin:/usr/bin:/bin"
-    RESTIC_BIN="/opt/restic"
+    export PATH="/restic-bin:/opt/bitnami/kubectl/bin:/usr/local/bin:/usr/bin:/bin"
+    RESTIC_BIN="/restic-bin/restic"
     NS="${TARGET_NAMESPACE:?}"
     STS="{{ .Values.backup.statefulSetName }}"
     SCALE_TIMEOUT="{{ .Values.backup.scaleTimeoutSeconds }}"
