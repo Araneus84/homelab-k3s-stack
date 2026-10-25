@@ -19,7 +19,7 @@ images:
     tag: "0.16.4"
     pullPolicy: IfNotPresent
 
-# Secret must exist in the release namespace before first sync:
+# Secret comes from templates/sealedsecret.yaml (added 2026-10-25). Manual alternative was:
 #   kubectl create secret generic restic-plex-credentials -n media \
 #     --from-literal=RESTIC_PASSWORD='(long random)'
 # Same password forever for this repository; rotate only if you re-init the repo.
