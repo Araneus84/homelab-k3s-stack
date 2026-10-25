@@ -60,8 +60,9 @@ resources:
     cpu: "1"
     memory: 1Gi
 
+# Same uid/gid as Plex (PLEX_UID/PLEX_GID=1000): its config files are 0600/0700 1000:1000, so 1001 could not read them.
 podSecurityContext:
   runAsNonRoot: true
-  runAsUser: 1001
-  runAsGroup: 1001
-  fsGroup: 1001
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
