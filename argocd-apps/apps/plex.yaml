@@ -20,3 +20,12 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+  # restic-backup scales plex to 0 nightly for a consistent DB copy; without this, selfHeal scaled it
+  # straight back up mid-backup.
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      name: plex
+      jsonPointers:
+        - /spec/replicas
