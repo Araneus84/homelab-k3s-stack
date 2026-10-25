@@ -11,6 +11,7 @@ data:
     set -euo pipefail
     export PATH="/restic-bin:/opt/bitnami/kubectl/bin:/usr/local/bin:/usr/bin:/bin"
     RESTIC_BIN="/restic-bin/restic"
+    export RESTIC_CACHE_DIR=/tmp/restic-cache
     NS="${TARGET_NAMESPACE:?}"
     STS="{{ .Values.backup.statefulSetName }}"
     SCALE_TIMEOUT="{{ .Values.backup.scaleTimeoutSeconds }}"

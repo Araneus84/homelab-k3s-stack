@@ -46,6 +46,8 @@ backup:
   excludes:
     - "**/Cache/**"
     - "**/Crash Reports/**"
+    # root-owned copy left by the 2026-10-20 Plex compromise cleanup; unreadable as uid 1000
+    - "**/Preferences.xml.bak-*"
 
 retention:
   keepDaily: 14
