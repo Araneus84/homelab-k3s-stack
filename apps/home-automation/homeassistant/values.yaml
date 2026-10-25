@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: homeassistant/home-assistant
-  tag: "2024.12.5"
+  tag: "2026.10.4"
   pullPolicy: IfNotPresent
 
 nameOverride: ""
