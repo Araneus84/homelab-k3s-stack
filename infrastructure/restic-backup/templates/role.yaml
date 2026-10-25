@@ -11,6 +11,11 @@ rules:
     resourceNames:
       - {{ .Values.backup.statefulSetName | quote }}
     verbs: ["get", "patch"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets/scale"]
+    resourceNames:
+      - {{ .Values.backup.statefulSetName | quote }}
+    verbs: ["get", "patch", "update"]
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["get", "list", "watch", "delete"]
